@@ -198,7 +198,7 @@ class RegisterController extends Controller
 
 
         // $credentials = $request->only('username');
-
+       //return $request->username;
 
 
         if(!User::where('username', $request->username)->exists()) {
@@ -206,6 +206,7 @@ class RegisterController extends Controller
         $this->createActivityLog('login', 'An authorized user trying to login');
             return response()->json(['message'=>'Unauthorized'], 401);
         }
+
 
 
 
@@ -224,7 +225,9 @@ class RegisterController extends Controller
 
         if($isDoctor == true) {
 
-            $doctor = FacadesDB::table('doctors')->where( 'phone', '=', $phone)->first();
+
+            $doctor = FacadesDB::table('doctors')->where( 'phone', '=', $request->username)->first();
+
             if($doctor == null){
                 $this->createActivityLog('Error', 'A Doctor Failed to Logged in');
                 return response()->json(['message'=>'Unauthorized'], 401);
@@ -245,7 +248,7 @@ class RegisterController extends Controller
 
 
         } else {
-            $client = FacadesDB::table('clients')->where( 'username', '=', $email)->get();
+            $client = FacadesDB::table('clients')->where( 'username', '=', $request->username)->get();
             $this->createActivityLog('Login', 'A Client Logged in');
 
             return response()->json(['message' => 'Logged successfully','data' => [
