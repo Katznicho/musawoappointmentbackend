@@ -128,6 +128,7 @@ class RegisterController extends Controller
             'isDoctor' => $request['isDoctor']= false,
             'otp' => $request['otp']= $rand,
             'username' => $request['username'],
+            'password' => Hash::make($request['12345678']),
         ]);
 
         $client_id = FacadesDB::table('users')->where( 'username', '=', $email)->first();
