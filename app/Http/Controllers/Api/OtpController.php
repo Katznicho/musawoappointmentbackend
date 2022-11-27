@@ -28,7 +28,7 @@ class OtpController extends Controller
     //
 
     public function verify(Request $request){
-        
+
 
         $credentials = $request->only('otp');
         $validator = Validator::make($credentials, [
@@ -44,7 +44,7 @@ class OtpController extends Controller
         $otp = $request['otp'];
         $user =FacadesDB::table('users')->where( 'otp', '=', $otp)->get();
         $setOtp = User::select('otp')->where('otp', '=', $otp)->update([
-            'otp' => NULL, 
+            'otp' => NULL,
         ]);
 
         if ($user->isEmpty()) {
@@ -57,6 +57,7 @@ class OtpController extends Controller
         $email = $user[0]->username;
         $client = FacadesDB::table('clients')->where( 'username', '=', $email)->get();
         $this->createActivityLog('Verify', 'OTP Verified', 'APP');
+        
             return response()->json(
                 [
                     'message' => 'Logged successfully',
@@ -67,7 +68,7 @@ class OtpController extends Controller
     }
 
     public function resend(Request $request){
-       
+
         $credentials = $request->only('username');
         $validator = Validator::make($credentials, [
             'username' => 'required',
@@ -83,37 +84,37 @@ class OtpController extends Controller
         $email = $request['username'];
         $client = User::select('id')->where('username', '=', $email)->get();
         if($client->isEmpty()){
-            return response()->json(['message' => 'No client found with this username'], 200); 
+            return response()->json(['message' => 'No client found with this username'], 200);
         } else {
             $user = User::select('id')->where('username', '=', $email)->update([
-                'otp' => $otp, 
+                'otp' => $otp,
             ]);
 
-            if (is_numeric($email)) { 
+            if (is_numeric($email)) {
                 $response = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message='.$otp.'&reciever='.$email);
                 return response()->json(['status'=>$response->getStatusCode(),'message' => 'Verification Code has been sent to your number']);
-            } elseif (filter_var($email, FILTER_VALIDATE_EMAIL)) { 
-                $data = ['otp'=>$otp]; 
+            } elseif (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $data = ['otp'=>$otp];
                 Mail::send('email_template', $data, function($message) use($email, $otp) {
-    
+
                     $message->to($email)->subject('Musawo Adfa');
                 });
-        
+
                 return response()->json(['message' => 'OTP has been sent to your email']);
              }
-    
+
             // Log activity
             $this->createActivityLog('resend', 'New Otp generated and sent', 'App');
-    
+
             return response()->json(['message' => 'Verification Code has been to your Email'], 200);
         }
     }
-  //'https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message=1234&reciever=0759983853  
+  //'https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message=1234&reciever=0759983853
 
 
-// forgot passsword 
+// forgot passsword
     public function forgotPassword(Request $request){
-        
+
         $credentials = $request->only('username');
         $validator = Validator::make($credentials, [
             'username' => 'required',
@@ -129,28 +130,28 @@ class OtpController extends Controller
         $email = $request['username'];
         $client = User::select('id')->where('username', '=', $email)->get();
         if($client->isEmpty()){
-            return response()->json(['message' => 'No client found with this username'], 200); 
+            return response()->json(['message' => 'No client found with this username'], 200);
         } else {
             $user = User::select('id')->where('username', '=', $email)->update([
-                'otp' => $otp, 
+                'otp' => $otp,
             ]);
             if (is_numeric($email)) {
                 $response = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message='.$otp.'&reciever='.$email);
                 return response()->json(['status'=>$response->getStatusCode(),'message' => 'Verification Code has been sent to your number']);
-            } elseif (filter_var($email, FILTER_VALIDATE_EMAIL)) { 
-                $data = ['otp'=>$otp]; 
+            } elseif (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $data = ['otp'=>$otp];
                 Mail::send('email_template', $data, function($message) use($email, $otp) {
-    
+
                     $message->to($email)->subject('Musawo Adfa');
                 });
-        
+
                 return response()->json(['message' => 'OTP has been sent to your email']);
              }
         }
     }
 // verify otp
     public function verifyOtp(Request $request){
-       
+
          $credentials = $request->only('otp');
         $validator = Validator::make($credentials, [
             'otp' => 'required|string',
@@ -165,7 +166,7 @@ class OtpController extends Controller
         $otp = $request['otp'];
         $user = FacadesDB::table('users')->where( 'otp', '=', $otp)->get();
         $setOtp = User::select('otp')->where('otp', '=', $otp)->update([
-            'otp' => NULL, 
+            'otp' => NULL,
         ]);
 
         if ($user->isEmpty()) {
@@ -187,7 +188,7 @@ class OtpController extends Controller
     }
 
     public function resetPassword(Request $request, $email){
-        
+
         $credentials = $request->only('password', 'c_password');
         $validator = Validator::make($credentials, [
             'password' => 'required',
@@ -206,17 +207,17 @@ class OtpController extends Controller
         } else {
 
                 $updateUser = FacadesDB::table('users')->where('username', "=", $email)->update([
-                    'password' => Hash::make($request['password']) 
+                    'password' => Hash::make($request['password'])
                 ]);
-           
-                   // Log activity  
+
+                   // Log activity
                    $this->createActivityLog('resend', 'New Otp generated and sent', 'App');
-           
+
                    return response()->json(['message' => 'Password Reset successfully'], 200);
-                
+
         }
 
-        
+
     }
 
     public function updateToken(Request $request, $id){
@@ -241,9 +242,9 @@ class OtpController extends Controller
         } else {
 
             $setToken = User::select('id')->where('id', '=', $id)->update([
-                'push_token' => $request['push_token'], 
+                'push_token' => $request['push_token'],
             ]);
-    
+
             return response()->json(
                 [
                     'message' => 'Token Updated Successfully'

@@ -143,49 +143,54 @@ class RegisterController extends Controller
         ]);
 
 
-        if (is_numeric($email)) {
-            //$response = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&passwor
-            //d=log//10tan10&message='.$rand.'&reciever='.$email);\
-            $phone = $email;
-            $message = $rand;
-            $curl = curl_init();
+        // if (is_numeric($email)) {
+        //     //$response = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&passwor
+        //     //d=log//10tan10&message='.$rand.'&reciever='.$email);\
+        //     $phone = $email;
+        //     $message = $rand;
+        //     $curl = curl_init();
 
-            curl_setopt_array($curl, array(
-              CURLOPT_URL => 'https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message='.$message.'&reciever='.$phone,
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_ENCODING => '',
-              CURLOPT_MAXREDIRS => 10,
-              CURLOPT_TIMEOUT => 0,
-              CURLOPT_FOLLOWLOCATION => true,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => 'GET',
-            ));
-            $response = curl_exec($curl);
-            curl_close($curl);
-            return response()->json(['status'=>200,'message' => 'Verification Code has been sent to your number']);
-        } elseif (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $data = ['otp'=>$rand];
+        //     curl_setopt_array($curl, array(
+        //       CURLOPT_URL => 'https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message='.$message.'&reciever='.$phone,
+        //       CURLOPT_RETURNTRANSFER => true,
+        //       CURLOPT_ENCODING => '',
+        //       CURLOPT_MAXREDIRS => 10,
+        //       CURLOPT_TIMEOUT => 0,
+        //       CURLOPT_FOLLOWLOCATION => true,
+        //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //       CURLOPT_CUSTOMREQUEST => 'GET',
+        //     ));
+        //     $response = curl_exec($curl);
+        //     curl_close($curl);
+        //     return response()->json(['status'=>200,'message' => 'Verification Code has been sent to your number']);
+        // } elseif (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        //     $data = ['otp'=>$rand];
 
-                Mail::send('email_template', $data, function($message) use($email, $rand) {
+        //         Mail::send('email_template', $data, function($message) use($email, $rand) {
 
-                    $message->to($email)->subject('musawo Adfa');
-                });
+        //             $message->to($email)->subject('musawo Adfa');
+        //         });
 
-                return response()->json(['message' => 'Verification Code has been sent to your email']);
-         }
+        //         return response()->json(['message' => 'Verification Code has been sent to your email']);
+        //  }
 
         // Log activity
         $this->createActivityLog('Register', 'A new user registered');
 
-        return response()->json(['message' => 'Verification Code has been to your Email'], 200);
+        // return response()->json(['message' => 'Verification Code has been to your Email'], 200);
+        
+        return response()->json(
+            [
+                'message' => 'Logged successfully',
+                'data'=>['user'=>$client]
+            ]
+        );
     }
 
     public function login(Request $request){
 
-
-
-
         $credentials = $request->only( 'username');
+
         //valid credential
         $validator = Validator::make($credentials, [
             'username' => 'required'

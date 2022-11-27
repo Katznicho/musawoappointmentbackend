@@ -4,29 +4,29 @@
 
 1.  Register Api(post)
     lname, fname, username, dob,password, c_password
-    This register API also generates an otp and sends it to the request user via an email.
+    This register API login in the user directly into the application.
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/register
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/register
 
 
 2.  Login Api(post)
     username and password only.
     This returns the details of the logged in user, with a success message
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/login
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/login
 
 
 3.  Otp Verification API(post)
     otp only
     This checks if the request otp and returns the user details with that particular otp and the otp is deleted, i.e set to null, else it will ask the user to resend the email via the resend api
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/confirm
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/confirm
 4. Resend OTP API (post)  
      username only
     The fresh Otp will be sent to the request user with using the request username and the otp of this particular user will be updated,
 
                 API URL(post)
-                https://dev.ssentezo.com/appointmentBackend/public/index.php/api/resend
+                https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/resend
 
 
 
@@ -35,7 +35,7 @@
     This updates the health Worker's current address.
 
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/update-doctor/{id}
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/update-doctor/{id}
               note. the id is for the health worker
 
 5.  Update Client Address API
@@ -43,7 +43,7 @@
     This updates the client's current address .
 
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/update-client/{id}
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/update-client/{id}
               note. the id is for the Client
 
 6.  Getting the closest Heath worker Address API
@@ -51,7 +51,7 @@
     This returns only one health worker in the category of the requested and who is closest to the client, and the details of the request.
 
                   API URL(get)
-                  https://dev.ssentezo.com/appointmentBackend/public/index.php/api/getDoctor/{id}
+                  https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/getDoctor/{id}
                   Note: the id here is for the client making the request
                   This also sends a mail to the doctor, to check the request
 
@@ -94,7 +94,7 @@
 
 7.  Accept Request
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/acceptRequest/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/acceptRequest/{id}
     Note: the id here is for that particular Request
 
         {
@@ -113,7 +113,7 @@
 
 8.  cancel Request by the doctor
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/cancelRequest/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/cancelRequest/{id}
     Note: the id here is for that particular Request that needs to be cancelled
     returns:
     {
@@ -122,7 +122,7 @@
 
 9.  Get the doctors current Request
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/getRequests/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/getRequests/{id}
     Note: This Id is for the doctor
     returns, the latest client to make a request to this particular Doctor  and the request details
     {
@@ -158,7 +158,7 @@
 
     10.  complete Request by the Doctor
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/completeRequest/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/completeRequest/{id}
     Note: the id here is for that particular Request that needs to be completed
     it also turns the requested health worker back to active
     returns:
@@ -168,7 +168,7 @@
 
     11.  cancel Request by the client
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/cancelClient/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/cancelClient/{id}
     Note: the id here is for that particular Request that needs to be cancelled
     it also turns the requested health worker back to active
     returns:
@@ -178,7 +178,7 @@
 
 12.  Get the doctor's History
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/doctorHistory/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/doctorHistory/{id}
     Note: This Id is for the doctor
     returns, the all the clients and requests that made a request to this particular Doctor  and the request details
     {
@@ -213,7 +213,7 @@
 
 13.  Get the client history
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/clientHistory/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/clientHistory/{id}
     Note: This Id is for the client
     returns, the all client's request details
     {
@@ -250,7 +250,7 @@
 
     14.  Get the Client's current Request
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/currentRequest/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/currentRequest/{id}
     Note: This Id is for the client
     returns, the latest client,s request and the doctor .
     {
@@ -287,7 +287,7 @@
 
     15. Confirm request completed Request by the Client
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/completeClient/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/completeClient/{id}
     Note: the id here is for that particular Request that has been completed and needs to be confirmed
     parameters required; (client_review, rating)
     returns:
@@ -307,7 +307,7 @@
     This updates the health Worker's status to active.
 
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/activate-doctor/{id}
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/activate-doctor/{id}
               note. the id is for the health worker
 
               {
@@ -320,7 +320,7 @@
     This updates the health Worker's status to inactive.
 
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/deactivate-doctor/{id}
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/deactivate-doctor/{id}
               note. the id is for the health worker
 
               {
@@ -332,7 +332,7 @@
     This updates the health Worker's status to inactive.
 
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/doctor-status/{id}
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/doctor-status/{id}
               note. the id is for the health worker
 
         {
@@ -346,7 +346,7 @@
     The only required Parameter is the username
 
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/forgotPassword
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/forgotPassword
               This sends an Otp to the client via the username entered
 
            {
@@ -357,7 +357,7 @@
     The only required Parameter is the otp
 
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/verifyOtp
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/verifyOtp
 {
     "message": "Logged successfully",
     "data": {
@@ -370,7 +370,7 @@
     The only required Parameters are password and c_password
 
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/resetPassword/{email}
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/resetPassword/{email}
               This is the {email} is the username that was returned after otp verification
 
            {
@@ -379,7 +379,7 @@
 
 21. Get all Laboratory services
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/allServices
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/allServices
               This returns all the laboratory services offered
 
 {
@@ -406,7 +406,7 @@
     service_name, client_contact, client_address 
 
               API URL(post)
-              https://dev.ssentezo.com/appointmentBackend/public/index.php/api/requestService/{id}
+              https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/requestService/{id}
               note. the id is for the Client making the lab service request
 
               {
@@ -429,7 +429,7 @@
 
 23. Confirm Lab request service completed  by the Client
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/rateLabRequest/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/rateLabRequest/{id}
     Note: the id here is for that particular Request that has been completed and needs to be confirmed
     parameters required; (client_review, rating)
     returns:
@@ -456,7 +456,7 @@
 
 24.  cancel Lab Request by the Client
     API URL
-    https://dev.ssentezo.com/appointmentBackend/public/index.php/api/cancelLabRequest/{id}
+    https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/cancelLabRequest/{id}
     Note: the id here is for that particular Request that needs to be cancelled
     returns:
     {
@@ -466,7 +466,7 @@
 
 25. Client On going Current Lab Request
       Api URL
-      https://dev.ssentezo.com/appointmentBackend/public/index.php/api/currentLabRequest/{id}
+      https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/api/currentLabRequest/{id}
        Note. id is for the client
 
        returns:
@@ -492,7 +492,7 @@
 
 26. Update Push Token API
       Api URL
-      https://dev.ssentezo.com/appointmentBackend/public/index.php/updateToken/{id}
+      https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/updateToken/{id}
        Note. id is for the user
 
        returns:
@@ -503,7 +503,7 @@
 
 27. Retrieve Push Token API
       Api URL
-      https://dev.ssentezo.com/appointmentBackend/public/index.php/RetrieveToken/{id}
+      https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/index.php/api/RetrieveToken/{id}
        Note. id is for the user
 
 {
