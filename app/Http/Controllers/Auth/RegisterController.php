@@ -115,15 +115,11 @@ class RegisterController extends Controller
         $rand = rand(1000, 9999);
         //log the random number
 
-
-
-        $data = [];
-
         $email = $request['username'];
 
         $otp = $request['otp'];
 
-        User::create([
+        $user = User::create([
             'name' => $request['fname'],
             'isDoctor' => $request['isDoctor']= false,
             'otp' => $request['otp']= $rand,
@@ -176,15 +172,19 @@ class RegisterController extends Controller
 
         // Log activity
         $this->createActivityLog('Register', 'A new user registered');
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+        $token->expires_at = Carbon::now()->addWeeks(1);
+        $token->save();
 
-        // return response()->json(['message' => 'Verification Code has been to your Email'], 200);
-        
-        return response()->json(
-            [
-                'message' => 'Logged successfully',
-                'data'=>['user'=>$client]
-            ]
-        );
+
+        return response()->json(['message' => 'Logged successfully','data' => [
+            'user' => $client,
+            'access_token' => $tokenResult->accessToken,
+            'token_type' => 'Bearer',
+            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
+            'user_id' => $client_id->id
+        ]]);
     }
 
     public function login(Request $request){
