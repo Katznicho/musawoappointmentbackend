@@ -12,10 +12,10 @@ use App\Models\Client;
 use App\Traits\LogTrait;
 use Stevebauman\Location\Facades\Location;
 use Illuminate\Support\Facades\Validator;
-use DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\sendingEmail;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class RequestController extends Controller
 {
@@ -23,14 +23,14 @@ class RequestController extends Controller
 
     public function getDoctor($id) {
         $client = Client::find($id);
-  
+
         if (is_null($client)) {
             // Log Activity
             $this->createActivityLog('Client', 'Client Not Found');
             return response(['message' => 'Client Not Found']);
         }
 
-        $pending = DB::table('requests')->where([['client_id', '=', $id], ['status', '=', 'pending']])->get();
+        $pending = FacadesDB::table('requests')->where([['client_id', '=', $id], ['status', '=', 'pending']])->get();
         if ($pending->isEmpty()){
             $lat1 = $client->latitude;
             $long1 = $client->longitude;
@@ -45,45 +45,45 @@ class RequestController extends Controller
                 return response(['message' => 'Please Make a request']);
            }
 
-            $role = DB::table('doctors')->where([[ 'role', '=', $health_worker], ['status', '=', 'active']])->get();
+            $role = FacadesDB::table('doctors')->where([[ 'role', '=', $health_worker], ['status', '=', 'active']])->get();
 
             if ($role->isEmpty()) {
-                $defaultDoctor = DB::table('doctors')->where( 'role', '=', 'Default')->get();
+                $defaultDoctor = FacadesDB::table('doctors')->where( 'role', '=', 'Default')->get();
                 $ddoctor_id = $defaultDoctor[0]->id;
                 $ddoctor_name = $defaultDoctor[0]->name;
                 $ddoctor_email = $defaultDoctor[0]->email;
-                $insertRequest = DB::insert("insert into requests (client_id, doctor_id, message) values ('$id', '$ddoctor_id', 'Doctor: $ddoctor_name, Client: $fname $lname Location: $address')");
+                $insertRequest = FacadesDB::insert("insert into requests (client_id, doctor_id, message) values ('$id', '$ddoctor_id', 'Doctor: $ddoctor_name, Client: $fname $lname Location: $address')");
                 $data = [
                     'otp'=>"Hello you have a new Request"
                 ];
                 Mail::send('email_template', $data, function($message) use($ddoctor_email) {
                     $message->to($ddoctor_email)->subject('Musawo Adfa, you have a request');
                });
-                $getRequest = DB::table('requests')->where( 'client_id', '=',$id)->orderBy("id", 'desc')->get();
+                $getRequest = FacadesDB::table('requests')->where( 'client_id', '=',$id)->orderBy("id", 'desc')->get();
                 return response(['response' => 'success','data'=>['doctor'=>$defaultDoctor[0], 'request'=>$getRequest[0]]]);
            }
-       
+
             $doctor = Doctor::selectRaw("*,( 6371 * acos( cos( radians(?) ) *cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?)) + sin( radians(?) ) *sin( radians( latitude ) ) )) AS distance", [$lat1, $long1, $lat1])->where([['role', '=', $health_worker],['status', '=', 'active']])->orderBy("distance", 'asc')->get();
             $name = $doctor[0]->name;
             $doctor_id = $doctor[0]->id;
 
-            $request_data = DB::insert("insert into requests (client_id, doctor_id, message) values ('$id', '$doctor_id', 'Doctor: $name, Client: $fname $lname Location: $address')");
+            $request_data = FacadesDB::insert("insert into requests (client_id, doctor_id, message) values ('$id', '$doctor_id', 'Doctor: $name, Client: $fname $lname Location: $address')");
             //send email to the doctor
             $data = [
                 'otp'=>"Hello you have a new Request"
-            ]; 
+            ];
             $email = $doctor[0]->email;
             Mail::send('email_template', $data, function($message) use($email) {
                 $message->to($email)->subject('Musawo Adfa');
            });
 
            // update the doctor status
-            $update_doctor = DB::table('doctors')->where( 'id', '=', $doctor_id)->update([
-                'status' => 'inactive', 
+            $update_doctor = FacadesDB::table('doctors')->where( 'id', '=', $doctor_id)->update([
+                'status' => 'inactive',
            ]);
 
            //get the request
-            $request = DB::table('requests')->where( 'client_id', '=',$id)->orderBy("id", 'desc')->get();
+            $request = FacadesDB::table('requests')->where( 'client_id', '=',$id)->orderBy("id", 'desc')->get();
 
             //log activity
             $this->createActivityLog('Client', 'Client Makes a request');
@@ -91,7 +91,7 @@ class RequestController extends Controller
 
         } else {
             $d_id = $pending[0]->doctor_id;
-            $pendingDoctor = DB::table('doctors')->where('id', '=', $d_id)->get();
+            $pendingDoctor = FacadesDB::table('doctors')->where('id', '=', $d_id)->get();
             return response(['response' => 'success','data'=>['doctor'=>$pendingDoctor[0], 'request'=>$pending[0]]]);
         }
 
@@ -99,95 +99,95 @@ class RequestController extends Controller
 
 
     public function acceptRequest($id) {
-        $request = DB::table('requests')->where( 'id', '=', $id)->first();
+        $request = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
         if(is_null($request)){
             $this->createActivityLog('Request', 'Request Not Found');
             return response(['message' => 'Request Not Found']);
         }
 
-        $update_request = DB::table('requests')->where( 'id', '=', $id)->update([
-            'status' => 'accepted', 
+        $update_request = FacadesDB::table('requests')->where( 'id', '=', $id)->update([
+            'status' => 'accepted',
         ]);
-        $requestAccepted = DB::table('requests')->where( 'id', '=', $id)->first();
+        $requestAccepted = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
         $this->createActivityLog('Request', 'Request accepted');
         return response(['message' => 'Request accepted', 'data'=>['request'=>$requestAccepted]]);
 
     }
- 
+
     public function cancelRequest($id) {
-        $request = DB::table('requests')->where( 'id', '=', $id)->first();
+        $request = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
 
         if(is_null($request)){
             $this->createActivityLog('Request', 'Request not found');
             return response(['message' => 'Request Not Found']);
         }
 
-        $update_request = DB::table('requests')->where( 'id', '=', $id)->update([
-            'status' => 'cancelled', 
+        $update_request = FacadesDB::table('requests')->where( 'id', '=', $id)->update([
+            'status' => 'cancelled',
         ]);
         $doctor_id = $request->doctor_id;
-        $update_doctor = DB::table('doctors')->where( 'id', '=', $doctor_id)->update([
-            'status' => 'active', 
+        $update_doctor = FacadesDB::table('doctors')->where( 'id', '=', $doctor_id)->update([
+            'status' => 'active',
         ]);
         return response(['message' => 'Request has been cancelled']);
-        
+
     }
 
     public function cancelRequestClient($id) {
-        $request = DB::table('requests')->where( 'id', '=', $id)->first();
+        $request = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
 
         if(is_null($request)){
             $this->createActivityLog('Request', 'Request not found');
             return response(['message' => 'Request Not Found']);
         }
         $doctor_id = $request->doctor_id;
-        $update_doctor = DB::table('doctors')->where( 'id', '=', $doctor_id)->update([
-            'status' => 'active', 
+        $update_doctor = FacadesDB::table('doctors')->where( 'id', '=', $doctor_id)->update([
+            'status' => 'active',
         ]);
-        $update_request = DB::table('requests')->where( 'id', '=', $id)->delete();
+        $update_request = FacadesDB::table('requests')->where( 'id', '=', $id)->delete();
         $this->createActivityLog('Request', 'Request has been cancelled');
         return response(['message' => 'Request deleted']);
-        
+
     }
 
     public function doctorRequests($id){
 
-        $doctor = DB::table('requests')->where( 'doctor_id', '=', $id)->first();
+        $doctor = FacadesDB::table('requests')->where( 'doctor_id', '=', $id)->first();
         if(is_null($doctor)){
             $this->createActivityLog('DoctorRequests', 'Doctor viewed his requests but had none');
             return response(['message' => 'Doctor not Found']);
         }
-        $requests = DB::table('requests')->where([['doctor_id', '=', $id], ['status', '!=', 'completed'], ['status', '!=', 'cancelled']])->orderBy("id", 'desc')->get();
+        $requests = FacadesDB::table('requests')->where([['doctor_id', '=', $id], ['status', '!=', 'completed'], ['status', '!=', 'cancelled']])->orderBy("id", 'desc')->get();
 
-        if($requests->isEmpty()){ 
+        if($requests->isEmpty()){
             $this->createActivityLog('DoctorRequests', 'Doctor viewed his requests but had none');
             return response(['message' => 'You do not have any requests yet']);
-        } 
+        }
 
         $client = $requests[0]->client_id;
         $request = $requests[0];
 
-        $request_client = DB::table('clients')->where( 'id', '=', $client)->get();
+        $request_client = FacadesDB::table('clients')->where( 'id', '=', $client)->get();
         $this->createActivityLog('DoctorRequests', 'Doctor viewed his requests');
         return response(['message' => 'Doctor Requests Returned successfully', 'data'=>['request'=>$requests[0],'client'=>$request_client]]);
-        
+
 
     }
 
     public function doctorHistory($id){
 
-        $doctor = DB::table('requests')->where( 'doctor_id', '=', $id)->first();
+        $doctor = FacadesDB::table('requests')->where( 'doctor_id', '=', $id)->first();
         if(is_null($doctor)){
             $this->createActivityLog('DoctorRequests', 'Doctor viewed his requests but had none');
             return response(['message' => 'You do not have any requests yet']);
         }
-        $requests = DB::table('requests')->where([
+        $requests = FacadesDB::table('requests')->where([
             ['doctor_id', '=', $id]])->orderBy("id", 'desc')->get();
 
             foreach ($requests as $request) {
-                $client[] = DB::table('clients')->where( 'id', '=', $request->client_id)->get();
+                $client[] = FacadesDB::table('clients')->where( 'id', '=', $request->client_id)->get();
                 $clients = $client;
-                
+
             }
 
         $this->createActivityLog('DoctorRequests', 'Doctor viewed his requests');
@@ -196,16 +196,16 @@ class RequestController extends Controller
 
     public function clientHistory($id){
 
-        $client = DB::table('requests')->where( 'client_id', '=', $id)->first();
+        $client = FacadesDB::table('requests')->where( 'client_id', '=', $id)->first();
         if(is_null($client)){
             $this->createActivityLog('clientRequests', 'Client viewed his requests but had none');
             return response(['message' => 'You do not have any History yet']);
         }
-        $requests = DB::table('requests')->where([
+        $requests = FacadesDB::table('requests')->where([
             ['client_id', '=', $id]])->orderBy("id", 'desc')->get();
 
             foreach ($requests as $request) {
-                $doctor[] = DB::table('doctors')->where( 'id', '=', $request->doctor_id)->get();
+                $doctor[] = FacadesDB::table('doctors')->where( 'id', '=', $request->doctor_id)->get();
             }
 
         $this->createActivityLog('DoctorRequests', 'Doctor viewed his requests');
@@ -213,20 +213,20 @@ class RequestController extends Controller
     }
 
     public function completeRequest($id) {
-        $request = DB::table('requests')->where( 'id', '=', $id)->first();
+        $request = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
         if(is_null($request)){
             $this->createActivityLog('Request', 'Request Not Found');
             return response(['message' => 'Request Not Found']);
         }
 
-        $update_request = DB::table('requests')->where( 'id', '=', $id)->update([
-            'status' => 'completed', 
+        $update_request = FacadesDB::table('requests')->where( 'id', '=', $id)->update([
+            'status' => 'completed',
         ]);
         $doctor_id = $request->doctor_id;
-        $update_doctor = DB::table('doctors')->where( 'id', '=', $doctor_id)->update([
-            'status' => 'active', 
+        $update_doctor = FacadesDB::table('doctors')->where( 'id', '=', $doctor_id)->update([
+            'status' => 'active',
         ]);
-        $requestAccepted = DB::table('requests')->where( 'id', '=', $id)->first();
+        $requestAccepted = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
         $this->createActivityLog('Request', 'Request Completed');
         return response(['message' => 'Request Completed', 'data'=>['request'=>$requestAccepted]]);
 
@@ -235,18 +235,18 @@ class RequestController extends Controller
 
     public function currentRequest($id){
 
-        $client = DB::table('requests')->where( 'client_id', '=', $id)->first();
+        $client = FacadesDB::table('requests')->where( 'client_id', '=', $id)->first();
         if(is_null($client)){
             $this->createActivityLog('DoctorRequests', 'Doctor viewed his requests but had none');
             return response(['message' => 'You do not have any requests yet']);
         }
-        $requests = DB::table('requests')->where([
+        $requests = FacadesDB::table('requests')->where([
             ['client_id', '=', $id], ['status', '!=', 'completed'], ['status', '!=', 'cancelled']])->orderBy("id", 'desc')->get();
 
         $doctor = $requests[0]->doctor_id;
         $request = $requests[0];
 
-        $request_doctor = DB::table('doctors')->where( 'id', '=', $doctor)->get();
+        $request_doctor = FacadesDB::table('doctors')->where( 'id', '=', $doctor)->get();
 
         $this->createActivityLog('ClientRequests', 'Client Viewed Current Request');
         return response(['message' => 'Client Request Returned successfully', 'data'=>['request'=>[$request],'doctor'=>$request_doctor]]);
@@ -254,7 +254,7 @@ class RequestController extends Controller
 
 
     public function completeClient(Request $request, $id) {
-        $req = DB::table('requests')->where([
+        $req = FacadesDB::table('requests')->where([
             ['id', '=', $id], ['status', '=', 'completed']])->first();
         if(is_null($req)){
             $this->createActivityLog('Request', 'Request Not yet Completed');
@@ -265,12 +265,12 @@ class RequestController extends Controller
             'client_review' => 'string',
             'rating' => 'string',
         ]);
-        $update_request = DB::table('requests')->where( 'id', '=', $id)->update([
-            'client_review' => $request->client_review, 
+        $update_request = FacadesDB::table('requests')->where( 'id', '=', $id)->update([
+            'client_review' => $request->client_review,
             'rating' => $request->rating,
             'updated_at' => Carbon::now(),
         ]);
-        $requestCompleted = DB::table('requests')->where( 'id', '=', $id)->first();
+        $requestCompleted = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
         $this->createActivityLog('Request', 'Request confirmed by client Completed');
         return response(['message' => 'Request confirmed by client Completed', 'data'=>['request'=>$requestCompleted]]);
 
@@ -281,22 +281,22 @@ class RequestController extends Controller
 
     //Requests
    public function showRequests(){
-    $requests = DB::table('requests')->get();
+    $requests = FacadesDB::table('requests')->get();
 
        return view('Requests',compact('requests'));
    }
 
    public function edit($id)
    {
-    $request = DB::table('requests')->where('id', "=", $id)->first();
- 
+    $request = FacadesDB::table('requests')->where('id', "=", $id)->first();
+
        if (is_null($request)) {
            return('Request not found.');
        }
-  
+
        return view('EditRequest', compact('request'));
    }
-   
+
    // /**
    //  * Update the specified resource in storage.
    //  *
@@ -306,15 +306,15 @@ class RequestController extends Controller
    //  */
    public function update(Request $request, $id)
    {
-       $requests = DB::table('requests')->where('id', "=", $id)->first();
-       $update_doctor = DB::table('requests')->where( 'id', '=', $id)->update([
-        'status' => $request->input('status'), 
+       $requests = FacadesDB::table('requests')->where('id', "=", $id)->first();
+       $update_doctor = FacadesDB::table('requests')->where( 'id', '=', $id)->update([
+        'status' => $request->input('status'),
     ]);
        // Log activity
        $this->createActivityLog('Update', 'Request Updated', 'Web', true);
        return redirect('Requests')->with('status', 'Request Updated Successfully');
    }
-  
+
    // /**
    //  * Remove the specified resource from storage.
    //  *
@@ -323,8 +323,8 @@ class RequestController extends Controller
    //  */
    public function destroy($id)
    {
-       $request = DB::table('requests')->where('id', "=", $id)->delete();
-       
+       $request = FacadesDB::table('requests')->where('id', "=", $id)->delete();
+
        // Log activity
        $this->createActivityLog('Delete', 'Request Has been Deleted', 'Web', true);
        return redirect('Requests')->with('status', 'Request Deleted Successfully');
