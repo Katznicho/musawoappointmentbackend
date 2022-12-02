@@ -50,7 +50,10 @@ class RequestController extends Controller
             $role = FacadesDB::table('doctors')->where([
 
                 ['role', 'like', '%' . $health_worker . '%'],
-                 ['status', '=', 'active']])->get();
+                 ['status', '=', 'active']
+
+                 ])
+                 ->get();
 
             if ($role->isEmpty()) {
                 $defaultDoctor = FacadesDB::table('doctors')->where( 'role', '=', 'Default')->get();
