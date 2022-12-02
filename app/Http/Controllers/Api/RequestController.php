@@ -32,14 +32,14 @@ class RequestController extends Controller
 
 
 
-        // $pending = FacadesDB::table('requests')->where([['client_id', '=', $id], ['status', '=', 'pending']])->get();
-        // if ($pending->isEmpty()){
-        //     $lat1 = $client->latitude;
-        //     $long1 = $client->longitude;
-        //     $health_worker = $client->health_worker;
-        //     $fname = $client->fname;
-        //     $lname = $client->lname;
-        //     $address = $client->address;
+        $pending = FacadesDB::table('requests')->where([['client_id', '=', $id], ['status', '=', 'pending']])->get();
+        if ($pending->isEmpty()){
+            $lat1 = $client->latitude;
+            $long1 = $client->longitude;
+            $health_worker = $client->health_worker;
+            $fname = $client->fname;
+            $lname = $client->lname;
+            $address = $client->address;
 
         //     if (is_null($health_worker)) {
         //     // Log Activity
