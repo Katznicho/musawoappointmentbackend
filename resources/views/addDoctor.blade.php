@@ -62,7 +62,7 @@
                                     <option>Default</option>
                                     <option>Nurse</option>
                                     <option>Doctor</option>
-                                    <option>physiologist</option>
+                                    <option>Physiotherapist</option>
                                     <option>Technician</option>
                                 </select>
 
