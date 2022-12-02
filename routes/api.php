@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Api\OtpController;
 use App\Http\Controllers\Api\RequestController;
+use App\Mail\DoctorTemplate;
 use Illuminate\Support\Facades\Mail;
 
 //registration and login Apis
@@ -59,4 +60,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//
+Route::get('/sendemail',  function(){
+    $data = array(
+        'name' => "Learning Laravel",
+    );
+    $email = "katznicho@gmail.com";
+    try {
+        Mail::to("katznicho@gmail.com")
+        //add subject
 
+    ->send(
+        new DoctorTemplate("Bruno", "Nicholas")
+);
+
+    } catch (\Throwable $th) {
+        //throw $th;
+        return $th->getMessage();
+    }
+
+
+})->name("sendemail");

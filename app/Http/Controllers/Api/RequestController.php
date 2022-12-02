@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Providers\RouteServiceProvider;
 use App\Http\Controllers\Controller;
+use App\Mail\DoctorTemplate;
 use Illuminate\Http\Request;
 use App\Models\Doctor;
 use App\Models\ClientRequest;
@@ -41,6 +42,8 @@ class RequestController extends Controller
             $lname = $client->lname;
             $address = $client->address;
 
+            $names = $fname . ' ' . $lname;
+
         //     if (is_null($health_worker)) {
         //     // Log Activity
         //         $this->createActivityLog('Client', 'Please Make a request');
@@ -64,9 +67,13 @@ class RequestController extends Controller
                 $data = [
                     'otp'=>"Hello you have a new Request"
                 ];
-                Mail::send('email_template', $data, function($message) use($ddoctor_email) {
-                    $message->to($ddoctor_email)->subject('Musawo Adfa, you have a request');
-               });
+            //     Mail::send('email_template', $data, function($message) use($ddoctor_email) {
+            //         $message->to($ddoctor_email)->subject('Musawo Adfa, you have a request');
+            //    });
+            Mail::to($ddoctor_email)
+            ->cc('adfamedicare69@gmail.com')
+            ->send(new DoctorTemplate($ddoctor_name, $names));
+
                 $getRequest = FacadesDB::table('requests')->where( 'client_id', '=',$id)->orderBy("id", 'desc')->get();
                 return response(['response' => 'success','data'=>['doctor'=>$defaultDoctor[0], 'request'=>$getRequest[0]]]);
            }
@@ -81,9 +88,12 @@ class RequestController extends Controller
                 'otp'=>"Hello you have a new Request"
             ];
             $email = $doctor[0]->email;
-            Mail::send('email_template', $data, function($message) use($email) {
-                $message->to($email)->subject('Musawo Adfa');
-           });
+        //     Mail::send('email_template', $data, function($message) use($email) {
+        //         $message->to($email)->subject('Musawo Adfa');
+        //    });
+        Mail::to($email)
+        ->cc('adfamedicare69@gmail.com')
+        ->send(new DoctorTemplate($name, $names));
 
            // update the doctor status
             $update_doctor = FacadesDB::table('doctors')->where( 'id', '=', $doctor_id)->update([
