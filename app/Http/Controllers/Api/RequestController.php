@@ -30,20 +30,22 @@ class RequestController extends Controller
             return response(['message' => 'Client Not Found']);
         }
 
-        $pending = FacadesDB::table('requests')->where([['client_id', '=', $id], ['status', '=', 'pending']])->get();
-        if ($pending->isEmpty()){
-            $lat1 = $client->latitude;
-            $long1 = $client->longitude;
-            $health_worker = $client->health_worker;
-            $fname = $client->fname;
-            $lname = $client->lname;
-            $address = $client->address;
 
-            if (is_null($health_worker)) {
-            // Log Activity
-                $this->createActivityLog('Client', 'Please Make a request');
-                return response(['message' => 'Please Make a request']);
-           }
+
+        // $pending = FacadesDB::table('requests')->where([['client_id', '=', $id], ['status', '=', 'pending']])->get();
+        // if ($pending->isEmpty()){
+        //     $lat1 = $client->latitude;
+        //     $long1 = $client->longitude;
+        //     $health_worker = $client->health_worker;
+        //     $fname = $client->fname;
+        //     $lname = $client->lname;
+        //     $address = $client->address;
+
+        //     if (is_null($health_worker)) {
+        //     // Log Activity
+        //         $this->createActivityLog('Client', 'Please Make a request');
+        //         return response(['message' => 'Please Make a request']);
+        //    }
 
             $role = FacadesDB::table('doctors')->where([[ 'role', '=', $health_worker], ['status', '=', 'active']])->get();
 

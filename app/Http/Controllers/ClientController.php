@@ -49,6 +49,9 @@ class ClientController extends Controller
             'health_worker' => $request->health_worker,
         ]);
 
+        //insert  into request table
+        
+
         //Log Activity
         $this->createActivityLog('Client', 'Client Status Updated');
 
