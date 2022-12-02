@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Api\OtpController;
 use App\Http\Controllers\Api\RequestController;
+use Illuminate\Support\Facades\Mail;
 
 //registration and login Apis
 Route::post('/register', [RegisterController::class, 'store']);
@@ -57,3 +58,25 @@ Route::post('/currentLabRequest/{id}', [App\Http\Controllers\LabController::clas
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//
+Route::get('/sendemail',  function(){
+    $data = array(
+        'name' => "Learning Laravel",
+    );
+    $email = "katznicho@gmail.com";
+    try {
+        Mail::send('email_template', $data, function($message) use($email) {
+            $message->to("katznicho@gmail.com")->subject('Musawo Adfa, you have a request');
+       });
+       //send an email without a using a  template
+          //Mail::raw('This is a test email', function($message) use($email) {
+
+
+    } catch (\Throwable $th) {
+        //throw $th;
+        return $th->getMessage();
+    }
+
+
+})->name("sendemail");
