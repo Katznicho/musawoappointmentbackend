@@ -15,12 +15,22 @@ use Stevebauman\Location\Facades\Location;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\sendingEmail;
+use App\Traits\SendPushNotifications;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB as FacadesDB;
 
 class RequestController extends Controller
 {
-    use LogTrait;
+    use LogTrait, SendPushNotifications;
+
+    public function sendSampleNotification(){
+        return $this->sendPushNotification(
+            'fW-T9YYwTumS5D2T2cSsUR:APA91bG6dTrIzxF9Kc2Tzo_F1-tiwHlCV3ajZQcl9bILTsRYis_54TNd2koIJMYt3ZTiOK0gFDbmq8punrA7E6zxa4py2WWY4y38DWA1_an9cozfRZJbGgbDrnUFCdNDb3Wb6nWdjbiD',
+            'Sample Notification',
+            'This is a sample notification',
+            ['data' => 'This is a sample notification']
+        );
+    }
 
     public function getDoctor($id) {
         $client = Client::find($id);
@@ -30,8 +40,6 @@ class RequestController extends Controller
             $this->createActivityLog('Client', 'Client Not Found');
             return response(['message' => 'Client Not Found']);
         }
-
-
 
         $pending = FacadesDB::table('requests')->where([['client_id', '=', $id], ['status', '=', 'pending']])->get();
         if ($pending->isEmpty()){
@@ -61,6 +69,7 @@ class RequestController extends Controller
             if ($role->isEmpty()) {
                 $defaultDoctor = FacadesDB::table('doctors')->where( 'role', '=', 'Default')->get();
                 $ddoctor_id = $defaultDoctor[0]->id;
+                $user_id = $defaultDoctor[0]->user_id;
                 $ddoctor_name = $defaultDoctor[0]->name;
                 $ddoctor_email = $defaultDoctor[0]->email;
                 $insertRequest = FacadesDB::insert("insert into requests (client_id, doctor_id, message) values ('$id', '$ddoctor_id', 'Doctor: $ddoctor_name, Client: $fname $lname Location: $address')");
@@ -74,6 +83,17 @@ class RequestController extends Controller
             ->cc('adfamedicare69@gmail.com')
             ->send(new DoctorTemplate($ddoctor_name, $names));
 
+            //get the user token
+            $user = User::find($user_id);
+            $message = "You have a new patient  from , {{ $names }}. Please check your app for more details";
+            $token = $user->device_token;
+            $this->sendPushNotification(
+                $token,
+                'New Patient Request',
+                $message,
+                ['data' => 'You have a new request']
+            );
+
                 $getRequest = FacadesDB::table('requests')->where( 'client_id', '=',$id)->orderBy("id", 'desc')->get();
                 return response(['response' => 'success','data'=>['doctor'=>$defaultDoctor[0], 'request'=>$getRequest[0]]]);
            }
@@ -81,6 +101,19 @@ class RequestController extends Controller
             $doctor = Doctor::selectRaw("*,( 6371 * acos( cos( radians(?) ) *cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?)) + sin( radians(?) ) *sin( radians( latitude ) ) )) AS distance", [$lat1, $long1, $lat1])->where([['role', '=', $health_worker],['status', '=', 'active']])->orderBy("distance", 'asc')->get();
             $name = $doctor[0]->name;
             $doctor_id = $doctor[0]->id;
+            $user_id = $doctor[0]->user_id;
+            //get the user token
+            $user = User::find($user_id);
+            $message = "You have a new patient  from , {{ $names }}. Please check your app for more details";
+            $token = $user->device_token;
+            $this->sendPushNotification(
+                $token,
+                'New Patient Request',
+                $message,
+                ['data' => 'You have a new request']
+            );
+
+
 
             $request_data = FacadesDB::insert("insert into requests (client_id, doctor_id, message) values ('$id', '$doctor_id', 'Doctor: $name, Client: $fname $lname Location: $address')");
             //send email to the doctor

@@ -60,24 +60,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//
-Route::get('/sendemail',  function(){
-    $data = array(
-        'name' => "Learning Laravel",
-    );
-    $email = "katznicho@gmail.com";
-    try {
-        Mail::to("katznicho@gmail.com")
-        //add subject
+Route::get('/push', [RequestController::class, 'sendSampleNotification']);
 
-    ->send(
-        new DoctorTemplate("Bruno", "Nicholas")
-);
-
-    } catch (\Throwable $th) {
-        //throw $th;
-        return $th->getMessage();
-    }
-
-
-})->name("sendemail");
