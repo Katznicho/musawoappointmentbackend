@@ -85,7 +85,7 @@ class RequestController extends Controller
 
             //get the user token
             $user = User::find($user_id);
-            $message = "You have a new patient  from , {{ $names }}. Please check your app for more details";
+            $message = "You have a new patient  from  $names . Please check your app for more details";
             $token = $user->push_token;
             if($token){
                 $this->sendPushNotification(
@@ -108,7 +108,7 @@ class RequestController extends Controller
             $user_id = $doctor[0]->user_id;
             //get the user token
             $user = User::find($user_id);
-            $message = "You have a new patient  from , {{ $names }}. Please check your app for more details";
+            $message = "You have a new patient  from  $names . Please check your app for more details";
             $token = $user->push_token;
             if($token){
                 $this->sendPushNotification(
