@@ -1,7 +1,7 @@
 @component('mail::message')
  Hello  {{ $doctor_name }},
 
-You have a new patient  from , {{ $patient_name }}. Please check your app for more details.
+You have a new patient  from request {{ $patient_name }}. Please check your app for more details.
 If you dont have the app, please download it from the link below.
 
 @component(

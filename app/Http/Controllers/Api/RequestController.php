@@ -23,14 +23,7 @@ class RequestController extends Controller
 {
     use LogTrait, SendPushNotifications;
 
-    public function sendSampleNotification(){
-        return $this->sendPushNotification(
-            'fW-T9YYwTumS5D2T2cSsUR:APA91bG6dTrIzxF9Kc2Tzo_F1-tiwHlCV3ajZQcl9bILTsRYis_54TNd2koIJMYt3ZTiOK0gFDbmq8punrA7E6zxa4py2WWY4y38DWA1_an9cozfRZJbGgbDrnUFCdNDb3Wb6nWdjbiD',
-            'Sample Notification',
-            'This is a sample notification',
-            ['data' => 'This is a sample notification']
-        );
-    }
+
 
     public function getDoctor($id) {
         $client = Client::find($id);
@@ -85,7 +78,7 @@ class RequestController extends Controller
 
             //get the user token
             $user = User::find($user_id);
-            $message = "You have a new patient  from  $names . Please check your app for more details";
+            $message = "You have a new patient  request from  $names . Please check your app for more details";
             $token = $user->push_token;
             if($token){
                 $this->sendPushNotification(
@@ -108,7 +101,7 @@ class RequestController extends Controller
             $user_id = $doctor[0]->user_id;
             //get the user token
             $user = User::find($user_id);
-            $message = "You have a new patient  from  $names . Please check your app for more details";
+            $message = "You have a new patient  request from  $names . Please check your app for more details";
             $token = $user->push_token;
             if($token){
                 $this->sendPushNotification(
