@@ -86,13 +86,17 @@ class RequestController extends Controller
             //get the user token
             $user = User::find($user_id);
             $message = "You have a new patient  from , {{ $names }}. Please check your app for more details";
-            $token = $user->device_token;
-            $this->sendPushNotification(
-                $token,
-                'New Patient Request',
-                $message,
-                ['data' => 'You have a new request']
-            );
+            $token = $user->push_token;
+            if($token){
+                $this->sendPushNotification(
+                    $token,
+                    'New Patient Request',
+                    $message,
+                    ['data' => 'You have a new request']
+                );
+
+            }
+
 
                 $getRequest = FacadesDB::table('requests')->where( 'client_id', '=',$id)->orderBy("id", 'desc')->get();
                 return response(['response' => 'success','data'=>['doctor'=>$defaultDoctor[0], 'request'=>$getRequest[0]]]);
@@ -105,13 +109,18 @@ class RequestController extends Controller
             //get the user token
             $user = User::find($user_id);
             $message = "You have a new patient  from , {{ $names }}. Please check your app for more details";
-            $token = $user->device_token;
-            $this->sendPushNotification(
-                $token,
-                'New Patient Request',
-                $message,
-                ['data' => 'You have a new request']
-            );
+            $token = $user->push_token;
+            if($token){
+                $this->sendPushNotification(
+                    $token,
+                    'New Patient Request',
+                    $message,
+                    ['data' => 'You have a new request']
+                );
+
+            }
+
+
 
 
 
