@@ -20,6 +20,8 @@ use App\Traits\SendPushNotifications;
 use Carbon\Carbon;
 use Facade\FlareClient\View;
 use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Js;
+use Nette\Utils\Json;
 
 class RequestController extends Controller
 {
@@ -31,6 +33,43 @@ class RequestController extends Controller
 
         //return view
         return View('requests_show', compact('patient_summary'));
+      }
+
+      public function updateSummary(Request $request , $id){
+          //check if request exists in the database if not create a new one otherwise update the existing one
+            $patient_summary = PatientSummary::where('request_id', $id)->get();
+            if($patient_summary->isEmpty()){
+
+                $patient_summary = PatientSummary::create([
+                    'request_id' => $id,
+                    'patient_names' => $request->patient_names,
+                    'doctor_names' => $request->doctor_names,
+                    'lab_services' => Json::encode($request->lab_services),
+                    'description' => $request->description,
+                    'total_amount' => $request->total_amount,
+                    'added_charge' => $request->added_charge,
+                    'lab_charge' => $request->lab_charge,
+                    'doctor_charge' => $request->doctor_charge,
+
+                ]);
+                return response(['response' => 'success','data'=>$patient_summary]);
+            }
+            else{
+                $patient_summary = PatientSummary::where('request_id', $id)->first();
+                 $patient_summary->request_id = $id;
+                $patient_summary->patient_names = $request->patient_names;
+                $patient_summary->doctor_names = $request->doctor_names;
+                $patient_summary->lab_services = Json::encode($request->lab_services);
+                $patient_summary->description = $request->description;
+                $patient_summary->total_amount = $request->total_amount;
+                $patient_summary->added_charge = $request->added_charge;
+                $patient_summary->lab_charge = $request->lab_charge;
+                $patient_summary->doctor_charge = $request->doctor_charge;
+
+                $patient_summary->save();
+                return response(['response' => 'success','data'=>$patient_summary]);
+            }
+
       }
 
     public function getDoctor($id) {
