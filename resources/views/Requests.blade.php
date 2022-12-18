@@ -24,11 +24,11 @@
       <th scope="col">Rating</th>
       <th scope="col">Updated Date</th>
       <th scope="col">Edit</th>
-      <th scope="col">delete</th>
+      <th scope="col">Show</th>
       </tr>
       </thead>
       <tbody>
-                
+
       @foreach ($requests as $request)
       <tr>
 
@@ -42,8 +42,11 @@
         <td>
           <a href="{{ url('edit-request/'.$request->id) }}" class="btn btn-primary btn-sm">Edit</a>
         </td>
+        {{-- <td>
+          <a href="{{ url('delete-request/'.$request->id) }}" class="btn btn-danger btn-sm">show</a>
+        </td> --}}
         <td>
-          <a href="{{ url('delete-request/'.$request->id) }}" class="btn btn-danger btn-sm">Delete</a>
+          <a href="{{ url('show-details/'.$request->id) }}" class="btn btn-info btn-sm">show</a>
         </td>
       </tr>
     @endforeach
