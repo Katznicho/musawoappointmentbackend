@@ -56,6 +56,11 @@ Route::post('/cancelLabRequest/{id}', [App\Http\Controllers\LabController::class
 Route::post('/rateLabRequest/{id}', [App\Http\Controllers\LabController::class, 'rateLabRequest']);
 Route::post('/currentLabRequest/{id}', [App\Http\Controllers\LabController::class, 'currentLabRequest']);
 
+// get doctor details
+Route::get('/getDoctorDetails/{id}', [App\Http\Controllers\DoctorController::class, 'getDoctorDetails']);
+// get client details
+Route::get('/getClientDetails/{id}', [App\Http\Controllers\ClientController::class, 'getClientDetails']);
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

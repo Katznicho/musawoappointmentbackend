@@ -23,6 +23,11 @@ class ClientController extends Controller
         return view('clients', compact('clients'));
     }
 
+    public function getClientDetails($id){
+        $client = Client::find($id);
+        return response(['response' => 'success','data'=>$client]);
+    }
+
 //get all clients
     public function clients()
     {
@@ -50,7 +55,7 @@ class ClientController extends Controller
         ]);
 
         //insert  into request table
-        
+
 
         //Log Activity
         $this->createActivityLog('Client', 'Client Status Updated');

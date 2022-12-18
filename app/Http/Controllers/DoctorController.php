@@ -16,8 +16,15 @@ use DB;
 class DoctorController extends Controller
 {
 
+
     use LogTrait;
-    //
+
+    public function getDoctorDetails($id)
+    {
+        $doctor = Doctor::find($id);
+        return response(['response' => 'success','data'=>$doctor]);
+    }
+    
     public function index()
     {
         $doctors = Doctor::all();
