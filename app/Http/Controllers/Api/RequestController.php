@@ -15,15 +15,23 @@ use Stevebauman\Location\Facades\Location;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\sendingEmail;
+use App\Models\PatientSummary;
 use App\Traits\SendPushNotifications;
 use Carbon\Carbon;
+use Facade\FlareClient\View;
 use Illuminate\Support\Facades\DB as FacadesDB;
 
 class RequestController extends Controller
 {
     use LogTrait, SendPushNotifications;
 
+      public function showDetails($id){
 
+        $patient_summary = PatientSummary::where('request_id', $id)->get();
+
+        //return view
+        return View('requests_show', compact('patient_summary'));
+      }
 
     public function getDoctor($id) {
         $client = Client::find($id);

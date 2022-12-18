@@ -78,6 +78,8 @@ Route::get('/Requests', [App\Http\Controllers\Api\RequestController::class, 'sho
 Route::post('/update-request/{id}', [App\Http\Controllers\Api\RequestController::class, 'update']);
 Route::get('/edit-request/{id}', [App\Http\Controllers\Api\RequestController::class, 'edit']);
 Route::get('delete-request/{id}', [App\Http\Controllers\Api\RequestController::class, 'destroy']);
+//show details
+Route::get('/show-details/{id}', [App\Http\Controllers\Api\RequestController::class, 'showDetails']);
 
 Route::post('/update-LabRequest/{id}', [App\Http\Controllers\LabController::class, 'updateRequest']);
 Route::get('/edit-LabRequest/{id}', [App\Http\Controllers\LabController::class, 'editRequest']);
