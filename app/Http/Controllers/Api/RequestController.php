@@ -72,6 +72,11 @@ class RequestController extends Controller
 
       }
 
+      public function getSummary($id){
+        $patient_summary = PatientSummary::where('request_id', $id)->get();
+        return response(['response' => 'success','data'=>$patient_summary]);
+      }
+
     public function getDoctor($id) {
         $client = Client::find($id);
 

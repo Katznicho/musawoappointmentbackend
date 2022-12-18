@@ -45,6 +45,8 @@ Route::post('/cancelClient/{id}', [RequestController::class, 'cancelRequestClien
 Route::post('/completeRequest/{id}', [RequestController::class, 'completeRequest']);
 //update client summary
 Route::post('/updateSummary/{id}', [RequestController::class, 'updateSummary']);
+//get updated summary
+Route::get('/getSummary/{id}', [RequestController::class, 'getSummary']);
 
  //history
 Route::post('/doctorHistory/{id}', [RequestController::class, 'doctorHistory']);
