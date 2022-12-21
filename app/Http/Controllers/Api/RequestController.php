@@ -221,6 +221,27 @@ class RequestController extends Controller
         $update_request = FacadesDB::table('requests')->where( 'id', '=', $id)->update([
             'status' => 'accepted',
         ]);
+        //get the client id from the request
+        $client_id = $request->client_id;
+        //get the doctor id from the request
+        $doctor_id = $request->doctor_id;
+
+        //get the user_id from  the clients table
+        $user_id = FacadesDB::table('clients')->where( 'id', '=', $client_id)->first()->user_id;
+        //get the user token
+        $user = User::find($user_id);
+        $message = "Your request has been accepted. Please check your app for more details";
+
+        $token = $user->push_token;
+        if($token){
+            $this->sendPushNotification(
+                $token,
+                'Request Accepted',
+                $message,
+                ['data' => 'Your request has been accepted']
+            );
+
+        }
         $requestAccepted = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
         $this->createActivityLog('Request', 'Request accepted');
         return response(['message' => 'Request accepted', 'data'=>['request'=>$requestAccepted]]);
@@ -233,6 +254,28 @@ class RequestController extends Controller
         if(is_null($request)){
             $this->createActivityLog('Request', 'Request not found');
             return response(['message' => 'Request Not Found']);
+        }
+
+        //get the client id from the request
+        $client_id = $request->client_id;
+        //get the doctor id from the request
+        $doctor_id = $request->doctor_id;
+
+        //get the user_id from  the clients table
+        $user_id = FacadesDB::table('clients')->where( 'id', '=', $client_id)->first()->user_id;
+        //get the user token
+        $user = User::find($user_id);
+        $message = "Your request has been cancelled. Please check your app for more details";
+
+        $token = $user->push_token;
+        if($token){
+            $this->sendPushNotification(
+                $token,
+                'Request Accepted',
+                $message,
+                ['data' => 'Your request has been accepted']
+            );
+
         }
 
         $update_request = FacadesDB::table('requests')->where( 'id', '=', $id)->update([
