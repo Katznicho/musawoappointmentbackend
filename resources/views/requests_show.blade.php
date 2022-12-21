@@ -26,15 +26,31 @@
           <h3>patient Names</h3>
           <p>{{ $patient_summary[0]->patient_names }}</p>
 
+          <h3>Lab Services</h3>
+          <p>
+            @foreach ($lab_services as $key=>$value)
+             {{-- create an ordered list --}}
+              <li>
+                {{ $value }}
+              </li>
+
+
+
+            @endforeach
+           </p>
+
          </div>
           <hr/>
 
          <div class="col-md-4">
           <input type="text" class="form-control" value="Doctor  Details" disabled>
-          <h3>Description</h3>
-          <p>{{ $patient_summary[0]->doctor_names }}</p>
           <h3>Doctor Names</h3>
+          <p>{{ $patient_summary[0]->doctor_names }}</p>
+
+          <h3>Description</h3>
           <p>{{ $patient_summary[0]->description}}</p>
+
+
 
 
 

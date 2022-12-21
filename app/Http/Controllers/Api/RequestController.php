@@ -31,8 +31,16 @@ class RequestController extends Controller
 
         $patient_summary = PatientSummary::where('request_id', $id)->get();
 
+        if($patient_summary->isEmpty()){
+            //set lab services to empty array
+            $lab_services = [];
+            return View('requests_show', compact('patient_summary', 'lab_services'));
+        }
+        $data =    Json::decode($patient_summary[0]->lab_services);
+        //split the lab services into an array
+        $lab_services = explode(',', $data);
         //return view
-        return View('requests_show', compact('patient_summary'));
+        return View('requests_show', compact('patient_summary', 'lab_services'));
       }
 
       public function updateSummary(Request $request , $id){
