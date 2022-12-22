@@ -113,7 +113,7 @@ class RequestController extends Controller
 
             $role = FacadesDB::table('doctors')->where([
 
-                ['role', 'like', '%' . $health_worker . '%'],
+                ['role', '=', $health_worker],
                  ['status', '=', 'active']
 
                  ])
