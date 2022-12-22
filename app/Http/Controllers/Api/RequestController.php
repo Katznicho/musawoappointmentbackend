@@ -248,6 +248,23 @@ class RequestController extends Controller
 
     }
 
+    public function NotifyUsers($id,$message , $title, $data=[]){
+        $user = User::find($id);
+        $message = $message;
+        //['data' => 'Your request has been accepted']
+
+        $token = $user->push_token;
+        if($token){
+            $this->sendPushNotification(
+                $token,
+                $title,
+                $message,
+
+            );
+
+        }
+    }
+
     public function cancelRequest($id) {
         $request = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
 
@@ -383,6 +400,13 @@ class RequestController extends Controller
             'status' => 'active',
         ]);
         $requestAccepted = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
+        //send notification to client and doctor
+        //get user id from the doctors table using the doctor_id
+        $doctor_id = FacadesDB::table('doctors')->where( 'id', '=', $doctor_id)->first()->user_id;
+        $this->NotifyUsers($doctor_id, 'Request Completed', 'Your completed the client request successfully');
+        $client_id = FacadesDB::table('clients')->where( 'id', '=', $request->client_id)->first()->user_id;
+        $this->NotifyUsers($client_id, 'Request Completed', 'Your request has been completed successfully');
+        //send notification to client and doctor
         $this->createActivityLog('Request', 'Request Completed');
         return response(['message' => 'Request Completed', 'data'=>['request'=>$requestAccepted]]);
 
@@ -428,6 +452,7 @@ class RequestController extends Controller
         ]);
         $requestCompleted = FacadesDB::table('requests')->where( 'id', '=', $id)->first();
         $this->createActivityLog('Request', 'Request confirmed by client Completed');
+
         return response(['message' => 'Request confirmed by client Completed', 'data'=>['request'=>$requestCompleted]]);
 
     }
@@ -487,3 +512,5 @@ class RequestController extends Controller
    }
 
 }
+
+//0700216664
