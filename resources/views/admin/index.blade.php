@@ -142,6 +142,36 @@
 
             </div>
           </div>
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>shs {{ number_format($total_completed_payments,2) }}</h3>
+
+                <p>Total Amount Completed Payments</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-people"></i>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>shs {{ number_format($total_pending_payments,2) }}</h3>
+
+                <p>Total Amount Pending Payments</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-people"></i>
+              </div>
+
+            </div>
+          </div>
            {{-- completed payments --}}
            {{-- payments --}}
 
