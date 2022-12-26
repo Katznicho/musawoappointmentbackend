@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\sendingEmail;
 use App\Models\PatientSummary;
+use App\Traits\HelperTrait;
 use App\Traits\SendPushNotifications;
 use Carbon\Carbon;
 use Facade\FlareClient\View;
@@ -25,7 +26,7 @@ use Nette\Utils\Json;
 
 class RequestController extends Controller
 {
-    use LogTrait, SendPushNotifications;
+    use LogTrait, SendPushNotifications, HelperTrait;
 
       public function showDetails($id){
 
@@ -58,6 +59,8 @@ class RequestController extends Controller
                     'added_charge' => $request->added_charge,
                     'lab_charge' => $request->lab_charge,
                     'doctor_charge' => $request->doctor_charge,
+                    'payment_status' => 'pending',
+                    'payment_reference' => $this->generatePaymentReference(),
 
                 ]);
                 return response(['response' => 'success','data'=>$patient_summary]);
@@ -72,7 +75,9 @@ class RequestController extends Controller
                 $patient_summary->total_amount = $request->total_amount;
                 $patient_summary->added_charge = $request->added_charge;
                 $patient_summary->lab_charge = $request->lab_charge;
-                $patient_summary->doctor_charge = $request->doctor_charge;
+                $patient_summary->mode_of_payment = $request->mode_of_payment;
+
+
 
                 $patient_summary->save();
                 return response(['response' => 'success','data'=>$patient_summary]);
