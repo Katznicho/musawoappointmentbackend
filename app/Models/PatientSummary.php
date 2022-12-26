@@ -26,6 +26,8 @@ class PatientSummary extends Model
         'mode_of_payment',
         'payment_reference',
         'narrative',
+        'client_id',
+        'doctor_id',
 
 
     ];

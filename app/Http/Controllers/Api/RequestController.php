@@ -47,6 +47,8 @@ class RequestController extends Controller
       public function updateSummary(Request $request , $id){
           //check if request exists in the database if not create a new one otherwise update the existing one
             $patient_summary = PatientSummary::where('request_id', $id)->get();
+            //get the client request
+            $client_request = ClientRequest::where('id', $id)->first();
             if($patient_summary->isEmpty()){
 
                 $patient_summary = PatientSummary::create([
@@ -61,6 +63,9 @@ class RequestController extends Controller
                     'doctor_charge' => $request->doctor_charge,
                     'payment_status' => 'pending',
                     'payment_reference' => $this->generatePaymentReference(),
+                    'client_id' => $client_request->client_id,
+                    'doctor_id' => $client_request->doctor_id,
+
 
                 ]);
                 return response(['response' => 'success','data'=>$patient_summary]);
@@ -76,6 +81,7 @@ class RequestController extends Controller
                 $patient_summary->added_charge = $request->added_charge;
                 $patient_summary->lab_charge = $request->lab_charge;
                 $patient_summary->mode_of_payment = $request->mode_of_payment;
+                
 
 
 
