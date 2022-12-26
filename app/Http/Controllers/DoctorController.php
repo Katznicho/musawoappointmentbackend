@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Traits\LogTrait;
 use DB;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class DoctorController extends Controller
 {
@@ -83,11 +84,11 @@ class DoctorController extends Controller
             'password' => Hash::make($input['email']),
         ]);
 
-        $doctor_id = DB::table('users')->where( 'username', '=', $username)->first();
+        $doctor_id = FacadesDB::table('users')->where( 'username', '=', $username)->first();
 
         $doctor = Doctor::create([
             'name' => $input['name'],
-            'phone' => $input['phone'],
+            'phone' => $this->formatMobileInternational($input['phone']),
             'address' => request()->ip(),
             'role' => $input['role'],
             'email' => $input['email'],
