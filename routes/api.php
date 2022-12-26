@@ -67,9 +67,15 @@ Route::get('/getDoctorDetails/{id}', [App\Http\Controllers\DoctorController::cla
 // get client details
 Route::get('/getClientDetails/{id}', [App\Http\Controllers\ClientController::class, 'getClientDetails']);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+//payments
+//get client payment details
+Route::get('/getPaymentDetails/{id}', [App\Http\Controllers\PaymentController::class, 'getClientPaymentDetails']);
+//get doctor payment details
+Route::get('/getDoctorPaymentDetails/{id}', [App\Http\Controllers\PaymentController::class, 'getDoctorPaymentDetails']);
 
 Route::get('/push', [RequestController::class, 'sendSampleNotification']);
 

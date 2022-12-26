@@ -78,4 +78,16 @@ class PaymentController extends Controller
         ]);
 
     }
+
+    public function getClientPaymentDetails(Request $request , $id){
+        $payments = PatientSummary::where('client_id', $id)->get();
+        return response(['response' => 'success','data'=>$payments]);
+
+    }
+    public function getDoctorPaymentDetails(Request $request , $id){
+        $payments = PatientSummary::where('doctor_id', $id)->get();
+        return response(['response' => 'success','data'=>$payments]);
+
+    }
+
 }
