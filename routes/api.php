@@ -13,6 +13,7 @@ Route::post('/register', [RegisterController::class, 'store']);
 Route::post('/login', [RegisterController::class, 'login']);
 Route::post('/confirm', [OtpController::class, 'verify']);
 Route::post('/resend', [OtpController::class, 'resend']);
+Route::post('/checkUserExists', [RegisterController::class, 'checkIfUserExists']);
 
 //push Token
 

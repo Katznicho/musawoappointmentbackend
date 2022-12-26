@@ -187,6 +187,34 @@ class RegisterController extends Controller
         ]]);
     }
 
+    public function checkIfUserExists(Request $request){
+
+        $credentials = $request->only('username');
+        //valid credential
+        $validator = Validator::make($credentials, [
+            'username' => 'required'
+        ]);
+        if ($validator->fails()) {
+
+            return response()->json(['message' => 'failure', 'data' => $validator->errors()],  Response::HTTP_BAD_REQUEST);
+        }
+
+        if(!User::where('username', $request->username)->exists()) {
+            // Log activity
+            // $this->createActivityLog('login', 'An authorized user trying to login');
+                return response()->json(['message'=>'failure', 'data'=>'No user found'], 401);
+         }
+         else{
+            return response()->json(['message'=>'success', 'data'=>'User found'], 200);
+         }
+
+
+    }
+
+
+
+
+
     public function login(Request $request){
 
         $credentials = $request->only( 'username');
