@@ -9,7 +9,9 @@ use App\Models\User;
 use App\Models\Client;
 use App\Traits\LogTrait;
 use App\Models\ClientRequest;
+use App\Models\PatientSummary;
 use DB;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class HomeController extends Controller
 {
@@ -35,11 +37,16 @@ class HomeController extends Controller
         $doctors =  Doctor::all();
         $users =  User::all();
         $clients = Client::all();
-        $requests = DB::table('requests')->get();
-        return view('admin.index',compact('doctors','users', 'clients', 'requests'));
+        $requests = FacadesDB::table('requests')->get();
+        //count all payments where status is pending
+         $pending_payments =  PatientSummary::where('payment_status', 'pending')->count();
+        //count all payments where status is completed
+        $completed_payments =  PatientSummary::where('payment_status', 'completed')->count();
+
+        return view('admin.index',compact('doctors','users', 'clients', 'requests', 'pending_payments', 'completed_payments'));
     }
 
-    // 
+    //
     // Show Activity Logs
     public function activityLogs(Request $request)
     {

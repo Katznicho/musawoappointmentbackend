@@ -22,6 +22,10 @@ class PatientSummary extends Model
         'added_charge',
         'lab_charge',
         'doctor_charge',
+        'payment_status',
+        'mode_of_payment',
+        'payment_reference',
+        'narrative',
 
 
     ];

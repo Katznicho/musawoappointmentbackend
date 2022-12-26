@@ -12,7 +12,7 @@
                 class="brand-image img-circle elevation-3" style="opacity: .8">
             <span class="brand-text font-weight-light">Appointment System</span>
         </a>
-    
+
         <!-- Sidebar -->
         <div class="sidebar">
             <!-- Sidebar user panel (optional) -->
@@ -26,8 +26,8 @@
                     </a>
                 </div>
             </div>
-    
-    
+
+
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -75,6 +75,13 @@
                                     <p>Lab Service Requests</p>
                                 </a>
                             </li>
+                            {{-- payments --}} <li class="nav-item">
+                                <a href="{{ url('labRequest') }}" class="nav-link active">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Payments</p>
+                                </a>
+                            </li>
+                            {{-- payments --}}
 
                             <li class="nav-item">
                                 <a href="{{ url('activityLogs') }}" class="nav-link active">
@@ -86,10 +93,10 @@
                     </li>
                     <!-- @endrole -->
 
-                
-    
+
+
                     <!--third party-->
-    
+
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->

@@ -19,12 +19,30 @@ class DoctorController extends Controller
 
     use LogTrait;
 
+    public function formatMobileInternational($mobile)
+    {
+        $length = strlen($mobile);
+        $m = '+256';
+        //format 1: +256752665888
+        if ($length == 13)
+        //return mobile with out the + sign
+            return  substr($mobile, 1);
+        elseif ($length == 12) //format 2: 256752665888
+            return $mobile;
+        elseif ($length == 10) //format 3: 0752665888
+            return $m .= substr($mobile, 1);
+        elseif ($length == 9) //format 4: 752665888
+            return $m .= $mobile;
+
+        return $mobile;
+    }
+
     public function getDoctorDetails($id)
     {
         $doctor = Doctor::find($id);
         return response(['response' => 'success','data'=>$doctor]);
     }
-    
+
     public function index()
     {
         $doctors = Doctor::all();
@@ -55,7 +73,7 @@ class DoctorController extends Controller
             return ($validator->errors());
         }
 
-        $username = $input['phone'];
+        $username = $this->formatMobileInternational($input['phone']);
         $user =  User::create([
             'name' => $input['name'],
             'role' => $input['role'],

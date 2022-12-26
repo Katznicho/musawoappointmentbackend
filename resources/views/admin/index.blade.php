@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Appointment System</title>
+  <title>Musawo Adfa | Appointment System</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -30,8 +30,8 @@
 <div class="wrapper">
     @include('navbars.auth.auth')
     @include('sidebars.leftsidebar')
-   
-      
+
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
@@ -108,14 +108,43 @@
 
             </div>
           </div>
-          <!-- ./col -->
+           {{-- payments --}}
+           {{-- pending payments --}}
+
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            
-          <!-- ./col -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{ $pending_payments }}</h3>
 
-          <!-- ./col -->
-        </div>
+                <p>Pending Payments</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-people"></i>
+              </div>
+
+            </div>
+          </div>
+           {{-- pending payments --}}
+           {{-- completed payments --}}
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ $completed_payments }}</h3>
+
+                <p>Completed Payments</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-people"></i>
+              </div>
+
+            </div>
+          </div>
+           {{-- completed payments --}}
+           {{-- payments --}}
+
         <!-- /.row -->
         <!-- Main row -->
         <div class="row">
@@ -124,8 +153,8 @@
 
 
             {{-- @yield('content') --}}
-           
-            
+
+
           </section>
           <!-- right col -->
         </div>
