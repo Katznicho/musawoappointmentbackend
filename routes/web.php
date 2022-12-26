@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -84,3 +85,6 @@ Route::get('/show-details/{id}', [App\Http\Controllers\Api\RequestController::cl
 Route::post('/update-LabRequest/{id}', [App\Http\Controllers\LabController::class, 'updateRequest']);
 Route::get('/edit-LabRequest/{id}', [App\Http\Controllers\LabController::class, 'editRequest']);
 Route::get('delete-LabRequest/{id}', [App\Http\Controllers\LabController::class, 'destroyRequest']);
+
+//create payment resource
+Route::resource('payments', PaymentController::class);

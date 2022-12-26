@@ -76,7 +76,7 @@
                                 </a>
                             </li>
                             {{-- payments --}} <li class="nav-item">
-                                <a href="{{ url('labRequest') }}" class="nav-link active">
+                                <a href="{{ route('payments.index') }}" class="nav-link active">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Payments</p>
                                 </a>
