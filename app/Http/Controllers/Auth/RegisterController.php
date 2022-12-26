@@ -210,7 +210,7 @@ class RegisterController extends Controller
         if(!User::where('username', $request->username)->exists()) {
         // Log activity
         $this->createActivityLog('login', 'An authorized user trying to login');
-            return response()->json(['message'=>'Unauthorized'], 401);
+            return response()->json(['message'=>'failure', 'data'=>'No user found'], 401);
         }
 
 
