@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ClientRequest extends Model
 {
     use HasFactory;
+    //add table name
+    protected $table = 'requests';
 
     protected $fillable = [
         'client_id',
