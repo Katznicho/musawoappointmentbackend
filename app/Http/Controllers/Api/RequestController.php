@@ -104,8 +104,42 @@ class RequestController extends Controller
         if (is_null($client)) {
             // Log Activity
             $this->createActivityLog('Client', 'Client Not Found');
-            return response(['message' => 'Client Not Found']);
+            return response(['message' => 'failure', 'data'=>'Client Not Found'],404);
         }
+        else{
+            //check if the client has a pending request
+            $reques = ClientRequest::where('client_id', $id)->where('status', 'pending')->get();
+            if ($reques->isEmpty()) {
+                // Log Activity
+                $this->createActivityLog('Client', 'No Pending Request');
+                return response(['message' => 'failure', 'data'=>'No Pending Request'],404);
+            }
+            else{
+                $request = ClientRequest::where('client_id', $id)->where('status', 'pending')->first();
+                $doctor = Doctor::find($request->doctor_id);
+                //get doctor email
+                $email = $doctor->email;
+                $name = $doctor->name;
+                $client_names = $client->fname . ' ' . $client->lname;
+                $user_id = $doctor->user_id;
+                //find the user from the users table
+                $user = User::find($user_id);
+                //get the push notification token
+                $token = $user->push_token;
+                //send push notification to the doctor
+                $this->sendPushNotification($token, 'Pending Request', 'You have a pending request from ' . $client->fname . ' ' . $client->lname);
+                //send an email to the doctor
+                Mail::to($email)
+                ->cc('adfamedicare69@gmail.com')
+                ->send(new DoctorTemplate($name, $client_names));
+
+
+                return response(['response' => 'success', 'data' => ['doctor' => $doctor, 'request' => $request[0]]]);
+            }
+
+        }
+
+
         $pending = FacadesDB::table('requests')->where([['client_id', '=', $id], ['status', '=', 'pending']])->get();
         if ($pending->isEmpty()) {
             $lat1 = $client->latitude;
