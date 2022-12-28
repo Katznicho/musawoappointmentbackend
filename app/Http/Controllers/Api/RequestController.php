@@ -23,6 +23,7 @@ use Facade\FlareClient\View;
 use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Js;
 use Nette\Utils\Json;
+use PhpParser\Node\Stmt\TryCatch;
 
 class RequestController extends Controller
 {
@@ -99,6 +100,8 @@ class RequestController extends Controller
 
     public function getDoctor($id)
     {
+         try {
+
         $client = Client::find($id);
 
         if (is_null($client)) {
@@ -106,10 +109,13 @@ class RequestController extends Controller
             $this->createActivityLog('Client', 'Client Not Found');
             return response(['message' => 'failure', 'data'=>'Client Not Found'],404);
         }
+
         else{
+
             //check if the client has a pending request
-            $reques = ClientRequest::where('client_id', $id)->where('status', 'pending')->get();
-            if ($reques->isEmpty()) {
+            $client_request = ClientRequest::where('client_id', $id)->where('status', 'pending')->get();
+
+            if ($client_request->isEmpty()) {
                 // Log Activity
                 // $this->createActivityLog('Client', 'No Pending Request');
                 // return response(['message' => 'failure', 'data'=>'No Pending Request'],404);
@@ -122,6 +128,7 @@ class RequestController extends Controller
                 $names = $fname . ' ' . $lname;
                 //check if the doctor of a given role is available and status is active
                 $doctor = Doctor::where('role', $health_worker)->where('status', 'active')->get();
+                
                 //if doctor is not available
                 if ($doctor->isEmpty()) {
                     // Log Activity
@@ -151,10 +158,11 @@ class RequestController extends Controller
                         'request_type' => $health_worker,
 
                     ]);
+                    //return $request;
                     // Log Activity
                     $this->createActivityLog('Client Request', 'Request Created');
                     //return response(['message' => 'success', 'data' => $request]);
-                    return response(['response' => 'success', 'data' => ['doctor' => $doctor[0], 'request' => $request[0]]]);
+                    return response(['response' => 'success', 'data' => ['doctor' => $doctor[0], 'request' => $request]]);
                 }
                 else{
                     $lat1 = $client->latitude;
@@ -219,15 +227,14 @@ class RequestController extends Controller
                 ->send(new DoctorTemplate($name, $client_names));
 
 
-                return response(['response' => 'success', 'data' => ['doctor' => $doctor, 'request' => $request[0]]]);
+                return response(['response' => 'success', 'data' => ['doctor' => $doctor, 'request' => $request]]);
             }
 
         }
+         } catch (\Throwable $th) {
+            return response(['response' => 'error', 'details' => $th->getTrace()]);
+         }
 
-        //old code
-
-
-        
     }
 
 
