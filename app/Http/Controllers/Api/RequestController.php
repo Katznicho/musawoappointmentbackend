@@ -128,7 +128,7 @@ class RequestController extends Controller
                 $names = $fname . ' ' . $lname;
                 //check if the doctor of a given role is available and status is active
                 $doctor = Doctor::where('role', $health_worker)->where('status', 'active')->get();
-                
+
                 //if doctor is not available
                 if ($doctor->isEmpty()) {
                     // Log Activity
@@ -197,11 +197,11 @@ class RequestController extends Controller
                         'doctor_id' => $doctor->id,
                         'status' => 'pending',
                         'request_type' => $health_worker,
+                         'message'=> "$health_worker : Doctor Available"
 
                     ]);
                     // Log Activity
                     $this->createActivityLog('Client Request', 'Request Created');
-                    //return response(['message' => 'success', 'data' => $request]);
                     return response(['response' => 'success', 'data' => ['doctor' => $doctor, 'request' => $request]]);
 
                 }
