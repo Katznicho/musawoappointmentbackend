@@ -98,7 +98,7 @@ class RequestController extends Controller
         return response(['response' => 'success', 'data' => $patient_summary]);
     }
 
-    public function getDoctor($id)
+    public function getDoctor(Request $request , $id)
     {
          try {
 
@@ -109,8 +109,21 @@ class RequestController extends Controller
             $this->createActivityLog('Client', 'Client Not Found');
             return response(['message' => 'failure', 'data'=>'Client Not Found'],404);
         }
+        //add validation to check for required fields
 
         else{
+            $validator = Validator::make($request->all(), [
+                'latitude' => 'required',
+                'longitude' => 'required',
+                'health_worker' => 'required',
+
+            ]);
+            if ($validator->fails()) {
+                // Log Activity
+                $this->createActivityLog('Client', 'Validation Error');
+                return response(['message' => 'failure', 'data'=>$validator->errors()],404);
+            }
+
 
             //check if the client has a pending request
             $client_request = ClientRequest::where('client_id', $id)->where('status', 'pending')->get();
@@ -119,9 +132,9 @@ class RequestController extends Controller
                 // Log Activity
                 // $this->createActivityLog('Client', 'No Pending Request');
                 // return response(['message' => 'failure', 'data'=>'No Pending Request'],404);
-                $lat1 = $client->latitude;
-                $long1 = $client->longitude;
-                $health_worker = $client->health_worker;
+                $lat1 = $request->latitude;
+                $long1 = $request->longitude;
+                $health_worker = $request->health_worker;
                 $fname = $client->fname;
                 $lname = $client->lname;
                 $address = $client->address;
@@ -165,9 +178,9 @@ class RequestController extends Controller
                     return response(['response' => 'success', 'data' => ['doctor' => $doctor[0], 'request' => $request]]);
                 }
                 else{
-                    $lat1 = $client->latitude;
-                    $long1 = $client->longitude;
-                    $health_worker = $client->health_worker;
+                    $lat1 = $request->latitude;
+                    $long1 = $request->longitude;
+                    $health_worker = $request->health_worker;
                     $fname = $client->fname;
                     $lname = $client->lname;
                     $address = $client->address;

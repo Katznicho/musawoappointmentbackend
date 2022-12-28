@@ -38,7 +38,7 @@ Route::post('/update-client/{id}', [App\Http\Controllers\ClientController::class
 Route::get('/get-clients', [App\Http\Controllers\ClientController::class, 'clients']);
 
 //request APis
-Route::get('/getDoctor/{id}', [RequestController::class, 'getDoctor']);
+Route::post('/getDoctor/{id}', [RequestController::class, 'getDoctor']);
 
 Route::post('/acceptRequest/{id}', [RequestController::class, 'acceptRequest']);
 Route::post('/cancelRequest/{id}', [RequestController::class, 'cancelRequest']);
