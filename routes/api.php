@@ -77,6 +77,7 @@ Route::get('/getClientDetails/{id}', [App\Http\Controllers\ClientController::cla
 Route::get('/getPaymentDetails/{id}', [App\Http\Controllers\PaymentController::class, 'getClientPaymentDetails']);
 //get doctor payment details
 Route::get('/getDoctorPaymentDetails/{id}', [App\Http\Controllers\PaymentController::class, 'getDoctorPaymentDetails']);
+Route::patch('/updatePayment/{id}' , [App\Http\Controllers\PaymentController::class, 'updatePayment']);
 
 Route::get('/push', [RequestController::class, 'sendSampleNotification']);
 

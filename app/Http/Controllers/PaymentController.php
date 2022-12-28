@@ -53,6 +53,27 @@ class PaymentController extends Controller
 
     }
 
+    public function updatePayment(Request $request , $id){
+        $this->validate($request, [
+            'payment_method' => 'required',
+            'payment_status' => 'required',
+        ]);
+        PatientSummary::find($id)->update(
+            [
+                'mode_of_payment' => $request->payment_method,
+                'payment_status' => $request->payment_status,
+                'narrative' => $request->description,
+            ]
+
+        );
+        //log the activity
+
+        $this->createActivityLog('update', 'Payment updated successfully', 'web', true);
+        //return
+        return response(['response' => 'success','data'=>"payment updated"]);
+
+    }
+
 
 
 
