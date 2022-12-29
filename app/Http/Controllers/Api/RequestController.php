@@ -140,7 +140,7 @@ class RequestController extends Controller
                 $address = $client->address;
                 $names = $fname . ' ' . $lname;
                 //check if the doctor of a given role is available and status is active
-                $doctor = Doctor::where('role', $health_worker)->where('status', 'active')->get();
+                $doctor = Doctor::where('role', $health_worker)->where('status', 'active')->whereNotNull('latitude')->whereNotNull('longitude')->get();
 
                 //if doctor is not available
                 if ($doctor->isEmpty()) {
@@ -185,8 +185,9 @@ class RequestController extends Controller
                     $lname = $client->lname;
                     $address = $client->address;
                     $names = $fname . ' ' . $lname;
-                    //select from the available doctors the doctor who is nearest to the client based on the latitude and longitude
-                    $doctor = Doctor::where('role', $health_worker)->where('status', 'active')->orderByRaw("SQRT(POW(69.1 * (latitude - ?), 2) + POW(69.1 * (? - longitude) * COS(latitude / 57.3), 2))", [$lat1, $long1])->first();
+                    //select from the available doctors the doctor who is nearest to the client based on the latitude and longitude ignoring null longitude and latitude
+                    $doctor = Doctor::where('role', $health_worker)->where('status', 'active')->whereNotNull('latitude')->whereNotNull('longitude')->orderByRaw("SQRT(POW(69.1 * (latitude - ?), 2) + POW(69.1 * (? - longitude) * COS(latitude / 57.3), 2))", [$lat1, $long1])->first();
+                    //$doctor = Doctor::where('role', $health_worker)->where('status', 'active')->orderByRaw("SQRT(POW(69.1 * (latitude - ?), 2) + POW(69.1 * (? - longitude) * COS(latitude / 57.3), 2))", [$lat1, $long1])->first();
                     //get doctor email
                     $email = $doctor->email;
                     $name = $doctor->name;
@@ -202,7 +203,7 @@ class RequestController extends Controller
                           ->cc('adfamedicare69@gmail.com')
                         ->send(new DoctorTemplate($name, $names));
                     //make doctor unavailable
-                    $doctor->status = 'unavailable';
+                    $doctor->status = 'inactive';
                     $doctor->save();
                     //create a new request
                     $request = ClientRequest::create([
