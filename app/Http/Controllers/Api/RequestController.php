@@ -365,6 +365,7 @@ class RequestController extends Controller
             return response(['message' => 'Request Not Found']);
         }
         $doctor_id = $request->doctor_id;
+        $client_id = $request->client_id;
         $update_doctor = FacadesDB::table('doctors')->where('id', '=', $doctor_id)->update([
             'status' => 'active',
         ]);
@@ -374,6 +375,38 @@ class RequestController extends Controller
                 'client_status'=>'cancelled'
             ]
         );
+        //get the user_id from  the clients table
+        $user_id = FacadesDB::table('clients')->where('id', '=', $client_id)->first()->user_id;
+        //get the user token
+        $user = User::find($user_id);
+        $message = "Your cancelled the request. Please check your app for more details";
+        //get the user token
+        $token = $user->push_token;
+        if ($token) {
+            $this->sendPushNotification(
+                $token,
+                'Request Cancelled',
+                $message,
+                ['data' => 'Your request has been cancelled']
+            );
+        }
+        //get the user id from the doctor table
+        $doctor_user_id = FacadesDB::table('doctors')->where('id', '=', $doctor_id)->first()->user_id;
+        //get the user token
+        $doctor_user = User::find($doctor_user_id);
+        $doctor_message = "The client cancelled the request. Please check your app for more details";
+        //get the user token
+        $doctor_token = $doctor_user->push_token;
+        if ($doctor_token) {
+            $this->sendPushNotification(
+                $doctor_token,
+                'Request Cancelled',
+                $doctor_message,
+                ['data' => 'Your request has been cancelled']
+            );
+        }
+
+
         $this->createActivityLog('Request', 'Request has been cancelled');
         return response(['message' => 'Request deleted']);
     }
