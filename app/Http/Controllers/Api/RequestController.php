@@ -34,8 +34,9 @@ class RequestController extends Controller
     public function getRequestStatus(Request $request , $id){
         $request = ClientRequest::where('id', $id)->first();
         $status = $request->status;
+        $client_status = $request->client_status;
 
-        return response(['response' => 'success', 'data' => $status], 200);
+        return response(['response' => 'success', 'data' =>['status'=>$status , 'client'=>$client_status] ], 200);
     }
 
     public function showDetails($id)

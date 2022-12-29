@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientRequest;
 use App\Models\PatientSummary;
 use App\Traits\LogTrait;
 use Illuminate\Http\Request;
@@ -67,6 +68,14 @@ class PaymentController extends Controller
 
         );
         //log the activity
+        //update the client status to completed from pending
+         $request_id  = PatientSummary::find($id)->request_id;
+         ClientRequest::find($request_id)->update(
+            [
+                'client_status' => 'completed',
+            ]
+            );
+
 
         $this->createActivityLog('update', 'Payment updated successfully', 'web', true);
         //return

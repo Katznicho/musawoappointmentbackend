@@ -18,6 +18,7 @@ class ClientRequest extends Model
         'status',
         'client_review',
         'rating',
-        'request_type'
+        'request_type',
+        'client_status'
     ];
 }
