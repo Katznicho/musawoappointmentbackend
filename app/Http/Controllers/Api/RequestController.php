@@ -27,7 +27,16 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class RequestController extends Controller
 {
+
     use LogTrait, SendPushNotifications, HelperTrait;
+
+
+    public function getRequestStatus(Request $request , $id){
+        $request = ClientRequest::where('id', $id)->first();
+        $status = $request->status;
+
+        return response(['response' => 'success', 'data' => $status], 200);
+    }
 
     public function showDetails($id)
     {
