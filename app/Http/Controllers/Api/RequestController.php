@@ -368,7 +368,12 @@ class RequestController extends Controller
         $update_doctor = FacadesDB::table('doctors')->where('id', '=', $doctor_id)->update([
             'status' => 'active',
         ]);
-        $update_request = FacadesDB::table('requests')->where('id', '=', $id)->delete();
+        $update_request = FacadesDB::table('requests')->where('id', '=', $id)->update(
+            [
+                'status' => 'cancelled',
+                'client_status'=>'cancelled'
+            ]
+        );
         $this->createActivityLog('Request', 'Request has been cancelled');
         return response(['message' => 'Request deleted']);
     }
