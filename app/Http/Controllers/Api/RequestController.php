@@ -77,6 +77,7 @@ class RequestController extends Controller
                 'payment_reference' => $this->generatePaymentReference(),
                 'client_id' => $client_request->client_id,
                 'doctor_id' => $client_request->doctor_id,
+                'request_type' => $client_request->request_type,
 
 
             ]);
