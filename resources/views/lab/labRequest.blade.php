@@ -11,6 +11,24 @@
   <div class="card-header">
     <h3 class="card-title ">Laboratory Services Requests</h3>
   </div>
+  <div>
+      <form
+      method="POST"
+      enctype="multipart/form-data"
+    action="{{ route('import') }}"
+      >
+       @csrf
+          {{-- add a file upload --}}
+            <div class="form-group">
+                <label for="file">Upload File</label>
+                <input type="file" name="file" id="file" class="form-control">
+            </div>
+            {{-- add a button --}}
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+      </form>
+  </div>
   <!-- /.card-header -->
   <div class="card-body">
     <table id="example1" class="table table-bordered table-striped">
@@ -27,7 +45,7 @@
       </tr>
       </thead>
       <tbody>
-                
+
                    @foreach ($labRequests as $labRequest)
                    <tr>
                      <td>
@@ -38,7 +56,7 @@
                      <td>{{ $labRequest->client_address }}</td>
                      <td>{{ $labRequest->status }}</td>
                      <td>{{ $labRequest->price }}</td>
-                     <td>{{ date('d/m/Y', strtotime($labRequest->created_at)) }}</td>       
+                     <td>{{ date('d/m/Y', strtotime($labRequest->created_at)) }}</td>
                      <td>
                         <a href="{{ url('edit-LabRequest/'.$labRequest->id) }}" class="btn btn-primary btn-sm">Edit</a>
                      </td>
@@ -51,6 +69,6 @@
     </table>
   </div>
 </div>
-    
+
 </div>
 @endsection

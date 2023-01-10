@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Imports\GenericImport;
 use Illuminate\Http\Request;
 use App\Models\LabService;
 use App\Models\LabRequest;
@@ -14,7 +15,7 @@ use Carbon\Carbon;
 use App\Mail\sendingEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
-
+use Maatwebsite\Excel\Facades\Excel;
 
 class LabController extends Controller
 {
@@ -30,16 +31,16 @@ class LabController extends Controller
     public function create(Request $request)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'name' => 'required|string',
             'price' => 'required|string',
         ]);
-   
+
         if($validator->fails()){
-            return ($validator->errors());       
+            return ($validator->errors());
         }
-   
+
         $service = LabService::create([
             'name' => $input['name'],
             'price' => $input['price'],
@@ -50,20 +51,20 @@ class LabController extends Controller
          * @param  array  $data
          * @return \App\Models\LabService
          */
-   
+
         // Log activity
         $this->createActivityLog('Created', 'New laboratory service added', 'Web', true);
         return redirect('labServices')->with('status', 'Laboratory Service Added Successfully');
-    } 
+    }
 
     public function edit($id)
     {
         $service = LabService::find($id);
-  
+
         if (is_null($service)) {
             return('Lab Service not found.');
         }
-   
+
         return view('lab.editLabService', compact('service'));
     }
 
@@ -87,7 +88,7 @@ class LabController extends Controller
     public function destroy($id)
     {
         $service = LabService::find($id);
-        $service->delete();  
+        $service->delete();
         // Log activity
         $this->createActivityLog('Deleted', 'Laboratory Service Has been Deleted', 'Web', true);
         return redirect('labServices')->with('status', 'Laboratory Service Deleted Successfully');
@@ -102,15 +103,15 @@ class LabController extends Controller
     public function requestService(Request $request, $id)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'service_name' => 'required|string',
             'client_contact' => 'required|string',
             'client_address' => 'required|string',
         ]);
-   
+
         if($validator->fails()){
-            return ($validator->errors());       
+            return ($validator->errors());
         }
 
         $pending = DB::table('lab_requests')->where([['client_id', '=', $id], ['status', '=', 'pending']])->get();
@@ -125,7 +126,7 @@ class LabController extends Controller
             $price = $req_price[0]->price;
 
             $client_name = $client->fname;
-       
+
             $labRequest = LabRequest::create([
                 'client_id' => $id,
                 'service_name' => $input['service_name'],
@@ -146,7 +147,7 @@ class LabController extends Controller
            $response = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message=NewLabRequest&reciever=0709184468');
            $res = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message=NewLabRequest&reciever=0772795991');
            $respo = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message=NewLabRequest&reciever=0785423523');
-    
+
             return response(['status'=>$response->getStatusCode(), 'code'=>$res->getStatusCode(), 'number'=>$respo->getStatusCode(),'response' => 'success','data'=>$labRequest]);
         } else {
             $r_id = $pending[0]->id;
@@ -170,7 +171,7 @@ class LabController extends Controller
         }
         $update_request = DB::table('lab_requests')->where( 'id', '=', $id)->delete();
         return response(['message' => 'Lab Request has been cancelled']);
-        
+
     }
 
     public function rateLabRequest(Request $request, $id) {
@@ -185,7 +186,7 @@ class LabController extends Controller
             'rating' => 'string',
         ]);
         $update_request = DB::table('lab_requests')->where( 'id', '=', $id)->update([
-            'client_review' => $request->client_review, 
+            'client_review' => $request->client_review,
             'rating' => $request->rating,
             'updated_at' => Carbon::now(),
         ]);
@@ -197,11 +198,11 @@ class LabController extends Controller
     public function editRequest($id)
     {
         $labRequest = LabRequest::find($id);
-  
+
         if (is_null($labRequest)) {
             return('Lab Request not found.');
         }
-   
+
         return view('lab.editLabRequest', compact('labRequest'));
     }
 
@@ -224,7 +225,7 @@ class LabController extends Controller
     public function destroyRequest($id)
     {
         $labRequest = LabRequest::find($id);
-        $labRequest->delete();  
+        $labRequest->delete();
         // Log activity
         $this->createActivityLog('Deleted', 'Laboratory Request Has been Deleted', 'Web', true);
         return redirect('labRequest')->with('status', 'Laboratory Request Deleted Successfully');
@@ -243,6 +244,20 @@ class LabController extends Controller
             return response(['message' => 'No on going Requests']);
         }
         return response(['message' => 'Client Lab Request Returned successfully', 'data'=>['request'=>$requests[0]]]);
+    }
+
+    public function importLabServices(Request $request){
+          //dd("here");
+       try {
+        Excel::import(new GenericImport, $request->file('file'));
+
+        // Log activity
+        $this->createActivityLog('Created', 'New laboratory service added', 'Web', true);
+        return redirect('labServices')->with('status', 'Laboratory Service Added Successfully')->with('success', 'Farmer imported successfully');
+    } catch (\Exception $e) {
+         dd($e->getMessage());
+    }
+
     }
 
 }

@@ -70,6 +70,8 @@ Auth::routes();
 Route::get('/labServices', [App\Http\Controllers\LabController::class, 'index'])->name('labServices');
 Route::get('/labRequest', [App\Http\Controllers\LabController::class, 'displayLabRequests'])->name('labRequest');
 
+Route::post('/import', [App\Http\Controllers\LabController::class, 'importLabServices'])->name('import');
+
 Route::post('/addLabService', [App\Http\Controllers\LabController::class, 'create']);
 Route::get('/editLabService/{id}', [App\Http\Controllers\LabController::class, 'edit']);
 Route::post('/update-service/{id}', [App\Http\Controllers\LabController::class, 'update']);
