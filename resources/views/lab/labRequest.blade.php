@@ -12,22 +12,21 @@
     <h3 class="card-title ">Laboratory Services Requests</h3>
   </div>
   <div>
-      <form
+      {{-- <form
       method="POST"
       enctype="multipart/form-data"
     action="{{ route('import') }}"
       >
        @csrf
-          {{-- add a file upload --}}
             <div class="form-group">
                 <label for="file">Upload File</label>
                 <input type="file" name="file" id="file" class="form-control">
             </div>
-            {{-- add a button --}}
+
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
-      </form>
+      </form> --}}
   </div>
   <!-- /.card-header -->
   <div class="card-body">
