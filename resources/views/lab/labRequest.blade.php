@@ -12,7 +12,7 @@
     <h3 class="card-title ">Laboratory Services Requests</h3>
   </div>
   <div>
-      {{-- <form
+      <form
       method="POST"
       enctype="multipart/form-data"
     action="{{ route('import') }}"
@@ -26,7 +26,7 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
-      </form> --}}
+      </form>
   </div>
   <!-- /.card-header -->
   <div class="card-body">

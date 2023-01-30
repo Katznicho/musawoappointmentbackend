@@ -13,7 +13,7 @@ class GenericImport implements ToModel, WithHeadingRow,SkipsEmptyRows
 {
     function model(array $row)
     {
-         //dd($row[0]['name']);
+        // dd($row['name']);
         //check if the entire row is empty
         if($row == null){
             return;
@@ -21,7 +21,8 @@ class GenericImport implements ToModel, WithHeadingRow,SkipsEmptyRows
 
 
 
-        if ($row[0] == 'name' || $row[2] == 'price' ) {
+        if ($row['name'] == 'name' || $row['name'] == 'price' ) {
+
             return;
         } else {
 
@@ -30,8 +31,8 @@ class GenericImport implements ToModel, WithHeadingRow,SkipsEmptyRows
 
                 return new LabService(
                     [
-                        'name' =>$row[0],
-                        'price' =>$row[2]
+                        'name' =>$row['name'],
+                        'price' =>$row['price']
 
                     ]
                 );
