@@ -66,81 +66,98 @@
           </div>
           <!-- ./col -->
           <div class="col-lg-3 col-6">
-            <!-- small box -->
+            <a href="{{route("healthworkers")}}">
+                             <!-- small box -->
             <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{ count($doctors) }}</h3>
+                <div class="inner">
+                  <h3>{{ count($doctors) }}</h3>
 
-                <p>Health Workers</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
+                  <p>Health Workers</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+
               </div>
 
-            </div>
+            </a>
+
+
           </div>
           <div class="col-lg-3 col-6">
-            <!-- small box -->
+            <a href="{{route("clients")}}">
+                             <!-- small box -->
             <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{ count($clients) }}</h3>
+                <div class="inner">
+                  <h3>{{ count($clients) }}</h3>
 
-                <p>Total Clients</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-people"></i>
-              </div>
+                  <p>Total Clients</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-people"></i>
+                </div>
 
-            </div>
+              </div>
+            </a>
+
           </div>
 
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{ count($requests) }}</h3>
+            <a href="{{route("Requests")}}">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                      <h3>{{ count($requests) }}</h3>
 
-                <p>Total Requests</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-people"></i>
-              </div>
+                      <p>Total Requests</p>
+                    </div>
+                    <div class="icon">
+                      <i class="ion ion-people"></i>
+                    </div>
 
-            </div>
+                  </div>
+            </a>
+
           </div>
            {{-- payments --}}
            {{-- pending payments --}}
 
           <div class="col-lg-3 col-6">
-            <!-- small box -->
+            <a href="{{route('payments.index')}}">
+                              <!-- small box -->
             <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{ $pending_payments }}</h3>
+                <div class="inner">
+                  <h3>{{ $pending_payments }}</h3>
 
-                <p>Pending Payments</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-people"></i>
-              </div>
+                  <p>Pending Payments</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-people"></i>
+                </div>
 
-            </div>
+              </div>
+            </a>
+
           </div>
            {{-- pending payments --}}
            {{-- completed payments --}}
 
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{ $completed_payments }}</h3>
+             <a href="{{route("payments.index")}}">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                      <h3>{{ $completed_payments }}</h3>
 
-                <p>Completed Payments</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-people"></i>
-              </div>
+                      <p>Completed Payments</p>
+                    </div>
+                    <div class="icon">
+                      <i class="ion ion-people"></i>
+                    </div>
 
-            </div>
+                  </div>
+            </a>
+
           </div>
 
           <div class="col-lg-3 col-6">

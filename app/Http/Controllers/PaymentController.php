@@ -16,7 +16,11 @@ class PaymentController extends Controller
     {
          //select from PatientSummary table
         $payments = PatientSummary::all();
-        return view('payments.index', compact('payments'));
+                //get all pending requests
+                $pending_requests = ClientRequest::where("status", 'pending')->get();
+                $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
+
+        return view('payments.index', compact('payments', 'pending_requests', 'pending_requests_total'));
     }
 
     public function show(Request $request , $id){

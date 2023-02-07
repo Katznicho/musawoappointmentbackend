@@ -59,7 +59,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/healthworkers', [App\Http\Controllers\DoctorController::class, 'index'])->name('healthworkers');
 Route::get('/edit-doctor/{id}', [App\Http\Controllers\DoctorController::class, 'edit']);
 Route::post('/update-doctor/{id}', [App\Http\Controllers\DoctorController::class, 'update']);
-Route::get('/clients', [App\Http\Controllers\ClientController::class, 'index']);
+Route::get('/clients', [App\Http\Controllers\ClientController::class, 'index'])->name("clients");
 
 Auth::routes(['verify' => true]);
 Route::get('delete-doctor/{id}', [DoctorController::class, 'destroy']);
