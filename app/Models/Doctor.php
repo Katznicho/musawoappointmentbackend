@@ -10,7 +10,7 @@ class Doctor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 
+        'name',
         'email',
         'phone',
         'role',
@@ -23,5 +23,6 @@ class Doctor extends Model
         'charges',
         'qualification',
         'user_id',
+        'profile_image'
     ];
 }

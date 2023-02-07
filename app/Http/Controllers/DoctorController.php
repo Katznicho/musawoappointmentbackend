@@ -41,6 +41,7 @@ class DoctorController extends Controller
 
     public function getDoctorDetails($id)
     {
+
         $doctor = Doctor::find($id);
         return response(['response' => 'success','data'=>$doctor]);
     }
@@ -51,6 +52,7 @@ class DoctorController extends Controller
         //get all pending requests
         $pending_requests = ClientRequest::where("status", 'pending')->get();
         $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
+
         return view('healthworkers', compact('doctors', 'pending_requests', 'pending_requests_total'));
     }
     /**
@@ -72,11 +74,20 @@ class DoctorController extends Controller
             'role' => 'required',
             'charges' => 'required',
             'qualification' =>'required',
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        if($validator->fails()){
-            return ($validator->errors());
-        }
+
+        // Store all ID images under one folder
+        $destination_path = 'public/dps';
+        //rename the image file to users name and current time
+        $old_name = $request->profile_image->getClientOriginalName();
+        $new_name = $input['name'] . '_' . time() . '.' . $request->profile_image->getClientOriginalExtension();
+        $request->profile_image->move(public_path($destination_path), $new_name);
+
+        // if($validator->fails()){
+        //     return ($validator->errors());
+        // }
 
         $username = $this->formatMobileInternational($input['phone']);
         $user =  User::create([
@@ -101,6 +112,7 @@ class DoctorController extends Controller
             'qualification' => $input['qualification'],
             'password' => Hash::make($input['email']),
             'user_id' => $doctor_id->id,
+            'profile_image' => $new_name,
         ]);
         /**
          * Create a new user instance after a valid registration.
@@ -110,6 +122,7 @@ class DoctorController extends Controller
          */
             // Log activity
             $this->createActivityLog('Register', 'A new Doctor Registered', 'Web', true);
+
 
         return redirect('healthworkers')->with('status', 'Doctor Added Successfully');
     }
@@ -127,8 +140,10 @@ class DoctorController extends Controller
         if (is_null($doctor)) {
             return('Doctor not found.');
         }
+        $pending_requests = ClientRequest::where("status", 'pending')->get();
+        $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
 
-        return view('edit-doctor', compact('doctor'));
+        return view('edit-doctor', compact('doctor', 'pending_requests', 'pending_requests_total'));
     }
 
     // /**
@@ -140,7 +155,19 @@ class DoctorController extends Controller
     //  */
     public function update(Request $request, $id)
     {
+
         $doctor = Doctor::find($id);
+        //check if an image was uploaded
+        if ($request->hasFile('profile_image')) {
+            // Store all ID images under one folder
+            $destination_path = 'public/dps';
+            //rename the image file to users name and current time
+            $old_name = $request->profile_image->getClientOriginalName();
+            $new_name = $request->input('name') . '_' . time() . '.' . $request->profile_image->getClientOriginalExtension();
+            $request->profile_image->move(public_path($destination_path), $new_name);
+            $doctor->profile_image = $new_name;
+            
+        }
         $cats = $doctor->email;
         $doctor->name = $request->input('name');
         $doctor->email = $request->input('email');

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PaymentController;
+use App\Models\ClientRequest;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,9 @@ Route::get('/', function () {
 
 
 Route::get('/addDoctor', function () {
-    return view('addDoctor');
+    $pending_requests = ClientRequest::where("status", 'pending')->get();
+    $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
+    return view('addDoctor', compact('pending_requests', 'pending_requests_total'));
 })->name('addDoctor');
 
 Route::get('/addLabService', function () {

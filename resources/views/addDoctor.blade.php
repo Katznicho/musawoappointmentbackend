@@ -9,7 +9,7 @@
                 <div class="card-header">{{ __('Add A New Doctor') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{url('/addDoctor')}}" id="addDoctor" name="addDoctor">
+                    <form method="POST" action="{{url('/addDoctor')}}" id="addDoctor" name="addDoctor" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group row">
@@ -52,6 +52,17 @@
                                 @enderror
                             </div>
                         </div>
+
+                        {{-- doctor image --}}
+                        <div class="form-group row">
+                            <label for="photo" class="col-md-4 col-form-label text-md-right">{{ __('Doctor Photo') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="photo" type="file" class="form-control" accept="image/*" required  name="profile_image">
+
+                            </div>
+                        </div>
+                        {{-- doctor image --}}
 
                         <div class="form-group row">
                             <label for="role" class="col-md-4 col-form-label text-md-right">{{ __('Role') }}</label>

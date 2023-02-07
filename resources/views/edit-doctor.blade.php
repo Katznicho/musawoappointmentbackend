@@ -9,7 +9,9 @@
                 <div class="card-header">{{ __('Edit Health Worker') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ url('update-doctor/'.$doctor->id) }}" id="editDoctor" name="editDoctor">
+                    <form method="POST" action="{{ url('update-doctor/'.$doctor->id) }}" id="editDoctor"
+                        name="editDoctor" enctype="multipart/form-data"
+                        >
                         @csrf
 
                         <div class="form-group row">
@@ -52,6 +54,17 @@
                                 @enderror
                             </div>
                         </div>
+
+                                                {{-- doctor image --}}
+                                                <div class="form-group row">
+                                                    <label for="photo" class="col-md-4 col-form-label text-md-right">{{ __('Doctor Photo') }}</label>
+
+                                                    <div class="col-md-6">
+                                                        <input id="photo" type="file" class="form-control" accept="image/*" required  name="profile_image">
+
+                                                    </div>
+                                                </div>
+                                                {{-- doctor image --}}
 
                         <div class="form-group row">
                             <label for="charges" class="col-md-4 col-form-label text-md-right">{{ __('Consultation Fee') }}</label>
@@ -102,7 +115,7 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4"> 
+                            <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Update Health Worker') }}
                                 </button>

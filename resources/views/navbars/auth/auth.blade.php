@@ -52,11 +52,11 @@
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
           <span class="badge badge-warning navbar-badge">
-            {{$pending_requests_total ?? ''}}
+            {{$pending_requests_total ?? '' ?? ''}}
           </span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">{{$pending_requests_total }} Notification(s)</span>
+          <span class="dropdown-item dropdown-header">{{$pending_requests_total ?? '' }} Notification(s)</span>
 
           {{-- <div class="dropdown-divider"></div>
 
@@ -67,7 +67,7 @@
 
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> {{$pending_requests_total }} client requests
+            <i class="fas fa-users mr-2"></i> {{$pending_requests_total ?? '' }} client requests
             <span class="float-right text-muted text-sm">10 minutes</span>
           </a>
 
