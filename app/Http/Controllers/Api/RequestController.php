@@ -340,14 +340,15 @@ class RequestController extends Controller
         if ($token) {
             $this->sendPushNotification(
                 $token,
-                'Request Accepted',
+                'Request Cancelled',
                 $message,
-                ['data' => 'Your request has been accepted']
+                ['data' => 'Your request has been cancelled']
             );
         }
 
         $update_request = FacadesDB::table('requests')->where('id', '=', $id)->update([
             'status' => 'cancelled',
+            'client_status' => 'cancelled',
         ]);
         $doctor_id = $request->doctor_id;
         $update_doctor = FacadesDB::table('doctors')->where('id', '=', $doctor_id)->update([
