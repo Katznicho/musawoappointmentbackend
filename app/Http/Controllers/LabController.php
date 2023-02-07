@@ -13,6 +13,7 @@ use App\Models\Client;
 use Illuminate\Support\Facades\DB ;
 use Carbon\Carbon;
 use App\Mail\sendingEmail;
+use App\Models\ClientRequest;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
@@ -25,7 +26,10 @@ class LabController extends Controller
     public function index()
     {
         $services = LabService::all();
-        return view('lab.labServices', compact('services'));
+        //get all pending requests
+        $pending_requests = ClientRequest::where("status", 'pending')->get();
+        $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
+        return view('lab.labServices', compact('services', 'pending_requests', 'pending_requests_total'));
     }
 
     public function create(Request $request)
@@ -160,7 +164,11 @@ class LabController extends Controller
     public function displayLabRequests()
     {
         $labRequests = LabRequest::latest()->paginate(200);
-        return view('lab.labRequest', compact('labRequests'));
+        //get all pending requests
+        $pending_requests = ClientRequest::where("status", 'pending')->get();
+        $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
+
+        return view('lab.labRequest', compact('labRequests', 'pending_requests', 'pending_requests_total'));
     }
 
     public function cancelLabRequest($id) {

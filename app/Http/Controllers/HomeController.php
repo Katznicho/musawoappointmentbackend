@@ -46,10 +46,15 @@ class HomeController extends Controller
         $total_completed_payments =  PatientSummary::where('payment_status', 'completed')->sum('total_amount');
         //count all payments where status is pending
         $total_pending_payments =  PatientSummary::where('payment_status', 'pending')->sum('total_amount');
+        //get all pending requests
+        $pending_requests = ClientRequest::where("status", 'pending')->get();
+        $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
+
 
         return view(
             'admin.index',
-        compact('doctors','users', 'clients', 'requests', 'pending_payments', 'completed_payments', 'total_completed_payments', 'total_pending_payments')
+        compact('doctors','users', 'clients', 'requests', 'pending_payments', 'completed_payments', 'total_completed_payments', 'total_pending_payments'
+        , 'pending_requests', 'pending_requests_total')
     );
     }
 

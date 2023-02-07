@@ -26,7 +26,7 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Navbar Search -->
-      
+
 
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
@@ -39,11 +39,11 @@
 
          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
              @csrf
-          </form> 
+          </form>
             <!-- Message End -->
           </a>
 
-          
+
 
         </div>
       </li>
@@ -51,27 +51,34 @@
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
+          <span class="badge badge-warning navbar-badge">
+            {{$pending_requests_total ?? ''}}
+          </span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
-          <div class="dropdown-divider"></div>
+          <span class="dropdown-item dropdown-header">{{$pending_requests_total }} Notification(s)</span>
+
+          {{-- <div class="dropdown-divider"></div>
+
           <a href="#" class="dropdown-item">
-            <i class="fas fa-envelope mr-2"></i> 4 new messages
+            <i class="fas fa-envelope mr-2"></i> New Requests
             <span class="float-right text-muted text-sm">3 mins</span>
-          </a>
+          </a> --}}
+
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> 8 friend requests
-            <span class="float-right text-muted text-sm">12 hours</span>
+            <i class="fas fa-users mr-2"></i> {{$pending_requests_total }} client requests
+            <span class="float-right text-muted text-sm">10 minutes</span>
           </a>
-          <div class="dropdown-divider"></div>
+
+          {{-- <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">
             <i class="fas fa-file mr-2"></i> 3 new reports
             <span class="float-right text-muted text-sm">2 days</span>
-          </a>
+          </a> --}}
+
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+          <a href="{{route('Requests')}}" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
       </li>
 
@@ -81,4 +88,3 @@
 
 
 </div>
-  

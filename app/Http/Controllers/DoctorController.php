@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Models\ClientRequest;
 use App\Traits\LogTrait;
 use DB;
 use Illuminate\Support\Facades\DB as FacadesDB;
@@ -47,7 +48,10 @@ class DoctorController extends Controller
     public function index()
     {
         $doctors = Doctor::all();
-        return view('healthworkers', compact('doctors'));
+        //get all pending requests
+        $pending_requests = ClientRequest::where("status", 'pending')->get();
+        $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
+        return view('healthworkers', compact('doctors', 'pending_requests', 'pending_requests_total'));
     }
     /**
      * Store a newly created resource in storage.

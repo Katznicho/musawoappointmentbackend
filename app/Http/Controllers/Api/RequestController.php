@@ -557,8 +557,11 @@ class RequestController extends Controller
     public function showRequests()
     {
         $requests = FacadesDB::table('requests')->get();
+        //get all pending requests
+        $pending_requests = ClientRequest::where("status", 'pending')->get();
+        $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
 
-        return view('Requests', compact('requests'));
+        return view('Requests', compact('requests', 'pending_requests', 'pending_requests_total'));
     }
 
     public function edit($id)

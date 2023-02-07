@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Doctor;
 use App\Models\Client;
 use App\Http\Controllers\Controller;
+use App\Models\ClientRequest;
 use DB;
 use App\Traits\LogTrait;
 
@@ -17,7 +18,10 @@ class ClientController extends Controller
     public function index()
     {
         $clients =  Client::all();
-        return view('clients', compact('clients'));
+        //get all pending requests
+        $pending_requests = ClientRequest::where("status", 'pending')->get();
+        $pending_requests_total =  ClientRequest::where("status", 'pending')->count();
+        return view('clients', compact('clients', 'pending_requests', 'pending_requests_total'));
     }
 
     public function getClientDetails($id){
