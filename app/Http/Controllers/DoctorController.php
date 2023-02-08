@@ -83,7 +83,7 @@ class DoctorController extends Controller
         //rename the image file to users name and current time
         $old_name = $request->profile_image->getClientOriginalName();
         $new_name = $input['name'] . '_' . time() . '.' . $request->profile_image->getClientOriginalExtension();
-        $request->profile_image->move(public_path($destination_path), $new_name);
+        $request->profile_image->storeAs($destination_path, $new_name);
 
         // if($validator->fails()){
         //     return ($validator->errors());
@@ -163,10 +163,12 @@ class DoctorController extends Controller
             $destination_path = 'public/dps';
             //rename the image file to users name and current time
             $old_name = $request->profile_image->getClientOriginalName();
-            $new_name = $request->input('name') . '_' . time() . '.' . $request->profile_image->getClientOriginalExtension();
-            $request->profile_image->move(public_path($destination_path), $new_name);
+            //remove spaces in the name and replace with underscore
+
+            $new_name =   str_replace(' ', '_', $request->input('name')). '_' . time() . '.' . $request->profile_image->getClientOriginalExtension();
+            $request->profile_image->storeAs($destination_path, $new_name);
             $doctor->profile_image = $new_name;
-            
+
         }
         $cats = $doctor->email;
         $doctor->name = $request->input('name');
