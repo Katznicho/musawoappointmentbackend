@@ -169,10 +169,12 @@ class RequestController extends Controller
                     $token = $user->push_token;
                     //send push notification to the doctor
                     $this->sendPushNotification($token, 'Pending Request', 'You have a pending request from ' . $names);
+
                     //send an email to the doctor
                     Mail::to($email)
                           ->cc('adfamedicare69@gmail.com')
                         ->send(new DoctorTemplate($name, $names));
+                        
                     //create a new request
                     $request = ClientRequest::create([
                         'client_id' => $client->id,

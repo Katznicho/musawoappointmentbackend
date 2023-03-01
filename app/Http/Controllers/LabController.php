@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Imports\GenericImport;
+use App\Mail\DoctorTemplate;
 use Illuminate\Http\Request;
 use App\Models\LabService;
 use App\Models\LabRequest;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB ;
 use Carbon\Carbon;
 use App\Mail\sendingEmail;
 use App\Models\ClientRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
@@ -122,6 +124,7 @@ class LabController extends Controller
         if ($pending->isEmpty()){
             $client = DB::table('clients')->where([['id', '=', $id]])->first();
             $req_price = DB::table('lab_services')->where('name', '=', $input['service_name'])->get();
+            $client_names =  $client->fname." ".$client->lname;
 
             if($req_price->isEmpty()){
                 return response(['message' => 'service not found']);
@@ -145,9 +148,13 @@ class LabController extends Controller
             $data = [
                 'otp'=>"Hello, there is a new Lab Request"
             ];
-            Mail::send('email_template', $data, function($message) {
-                $message->to('adfamedicare69@gmail.com')->subject('Musawo Adfa Lab Request');
-           });
+            //send an email to the doctor
+            // Mail::to("katznicho@gmail.com")->send(new DoctorTemplate("Dr Mathius Ssenyondo", $client_names));
+            $user = User::find($client->user_id);
+            //get the push notification token
+            $token = $user->push_token;
+            //send push notification to the doctor
+            $this->sendPushNotification($token, 'Lab Request Received', "$client_names your lab request has been received");
            $response = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message=NewLabRequest&reciever=0709184468');
            $res = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message=NewLabRequest&reciever=0772795991');
            $respo = Http::get('https://sms.thinkxsoftware.com/sms_api/api.php?link=sendmessage&user=musawoadfa&password=log10tan10&message=NewLabRequest&reciever=0785423523');
