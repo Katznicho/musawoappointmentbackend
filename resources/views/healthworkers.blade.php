@@ -38,7 +38,7 @@
       <tr>
         <td>
             <img
-             src="{{ 'https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/storage/dps/'$doctor->profile_image }}"
+             src="'https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/storage/dps/{{$doctor->profile_image }}"
              width="100px"
              height="100px"
              style="border-radius: 50%"
