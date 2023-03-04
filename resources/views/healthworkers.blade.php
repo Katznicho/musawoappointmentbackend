@@ -19,7 +19,7 @@
     <table id="example1" class="table table-bordered table-striped">
       <thead>
       <tr>
-      <th scope="col">ID</th>
+      <th scope="col">IMAGE</th>
       <th scope="col">NAME</th>
       <th scope="col">EMAIL</th>
       <th scope="col">CONTACT</th>
@@ -29,15 +29,21 @@
       <th scope="col">QUALIFICATION</th>
       <th scope="col">STATUS</th>
       <th scope="col">Edit</th>
-      <th scope="col">Delete</th>
+      {{-- <th scope="col">Delete</th> --}}
       </tr>
       </thead>
       <tbody>
-                
+
       @foreach ($doctors as $doctor)
       <tr>
-
-        <td>{{ $doctor->id }}</td>
+        <td>
+            <img
+             src="{{ 'https://app.musawo.adfamedicareservices.com/musawoappointmentbackend/public/storage/dps/'$doctor->profile_image }}"
+             width="100px"
+             height="100px"
+             style="border-radius: 50%"
+            />
+        </td>
         <td>{{ $doctor->name }}</td>
         <td>{{ $doctor->email }}</td>
         <td>{{ $doctor->phone }}</td>
@@ -50,9 +56,9 @@
         <td>
           <a href="{{ url('edit-doctor/'.$doctor->id) }}" class="btn btn-primary btn-sm">Edit</a>
         </td>
-        <td>
+        {{-- <td>
           <a href="{{ url('delete-doctor/'.$doctor->id) }}" class="btn btn-danger btn-sm">Delete</a>
-        </td>
+        </td> --}}
       </tr>
     @endforeach
       </tbody>
