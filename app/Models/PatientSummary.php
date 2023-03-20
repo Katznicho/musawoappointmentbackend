@@ -28,7 +28,8 @@ class PatientSummary extends Model
         'narrative',
         'client_id',
         'doctor_id',
-        'request_type'
+        'request_type',
+        'prescription'
 
 
     ];

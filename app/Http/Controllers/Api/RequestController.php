@@ -79,6 +79,7 @@ class RequestController extends Controller
                 'client_id' => $client_request->client_id,
                 'doctor_id' => $client_request->doctor_id,
                 'request_type' => $client_request->request_type,
+                'prescription'=>$client_request->patient_p
 
 
             ]);
@@ -94,6 +95,8 @@ class RequestController extends Controller
             $patient_summary->added_charge = $request->added_charge;
             $patient_summary->lab_charge = $request->lab_charge;
             $patient_summary->mode_of_payment = $request->mode_of_payment;
+            //update prescription
+            $patient_summary->prescription = $client_request->patient_p;
 
 
 
@@ -174,7 +177,7 @@ class RequestController extends Controller
                     Mail::to($email)
                           ->cc('adfamedicare69@gmail.com')
                         ->send(new DoctorTemplate($name, $names));
-                        
+
                     //create a new request
                     $request = ClientRequest::create([
                         'client_id' => $client->id,
